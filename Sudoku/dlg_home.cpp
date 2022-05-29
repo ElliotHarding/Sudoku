@@ -67,6 +67,10 @@ void DLG_Home::keyPressEvent(QKeyEvent *event)
         {
             setValue(m_selectedTile, event->key() - 48);
         }
+        else if(event->key() == Qt::Key::Key_Backspace || event->key() == Qt::Key::Key_Delete)
+        {
+            setValue(m_selectedTile, 0);
+        }
     }
 }
 
