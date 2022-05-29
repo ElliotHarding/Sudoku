@@ -26,5 +26,7 @@ private:
     QVector<QVector<Tile*>> m_board;
 
     QPoint m_selectedTile;
+
+    void setValue(const QPoint& location, const int& value);
 };
 #endif // DLG_HOME_H

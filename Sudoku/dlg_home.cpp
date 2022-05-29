@@ -65,9 +65,13 @@ void DLG_Home::keyPressEvent(QKeyEvent *event)
     {
         if(event->key() >= Qt::Key::Key_0 && event->key() <= Qt::Key::Key_9)
         {
-            const int value = event->key() - 48;
-            m_board[m_selectedTile.x()][m_selectedTile.y()]->setValue(value);
+            setValue(m_selectedTile, event->key() - 48);
         }
     }
+}
+
+void DLG_Home::setValue(const QPoint& location, const int& value)
+{
+    m_board[location.x()][location.y()]->setValue(value);
 }
 
