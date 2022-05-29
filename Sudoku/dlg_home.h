@@ -27,6 +27,6 @@ private:
 
     QPoint m_selectedTile;
 
-    void setValue(const QPoint& location, const int& value);
+    void trySetValue(const QPoint& location, const int& value);
 };
 #endif // DLG_HOME_H
