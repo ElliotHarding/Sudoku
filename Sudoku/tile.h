@@ -9,8 +9,11 @@ class Tile : QWidget
 public:
     Tile(QWidget* parent, const int& x, const int& y, const int& w, const int& h);
 
-    void setValue(int value, bool permanent = false);
+    void setValue(int value);
     int value();
+
+    void setPermanent(bool permanent);
+    bool isPermanent();
 
     void setSelected(bool selected);
 

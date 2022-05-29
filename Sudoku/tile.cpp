@@ -11,16 +11,26 @@ Tile::Tile(QWidget* parent, const int& x, const int& y, const int& w, const int&
     setGeometry(x, y, w, h);
 }
 
-void Tile::setValue(int value, bool permanent)
+void Tile::setValue(int value)
 {
     m_value = value;
-    m_bPermanent = permanent;
     update();
 }
 
 int Tile::value()
 {
     return m_value;
+}
+
+void Tile::setPermanent(bool permanent)
+{
+    m_bPermanent = permanent;
+    update();
+}
+
+bool Tile::isPermanent()
+{
+    return m_bPermanent;
 }
 
 void Tile::setSelected(bool selected)

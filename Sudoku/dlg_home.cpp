@@ -22,7 +22,8 @@ DLG_Home::DLG_Home(QWidget *parent)
         }
     }
 
-    m_board[0][1]->setValue(5, true);
+    m_board[0][1]->setValue(5);
+    m_board[0][1]->setPermanent(true);
 }
 
 DLG_Home::~DLG_Home()
@@ -65,17 +66,20 @@ void DLG_Home::keyPressEvent(QKeyEvent *event)
     {
         if(event->key() >= Qt::Key::Key_0 && event->key() <= Qt::Key::Key_9)
         {
-            setValue(m_selectedTile, event->key() - 48);
+            trySetValue(m_selectedTile, event->key() - 48);
         }
         else if(event->key() == Qt::Key::Key_Backspace || event->key() == Qt::Key::Key_Delete)
         {
-            setValue(m_selectedTile, 0);
+            trySetValue(m_selectedTile, 0);
         }
     }
 }
 
-void DLG_Home::setValue(const QPoint& location, const int& value)
+void DLG_Home::trySetValue(const QPoint& location, const int& value)
 {
-    m_board[location.x()][location.y()]->setValue(value);
+    if(!m_board[location.x()][location.y()]->isPermanent())
+    {
+        m_board[location.x()][location.y()]->setValue(value);
+    }
 }
 
