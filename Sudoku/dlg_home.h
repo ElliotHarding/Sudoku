@@ -18,6 +18,7 @@ public:
 
 protected:
     void mousePressEvent(QMouseEvent* mouseEvent) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
 private:
     Ui::DLG_Home *ui;

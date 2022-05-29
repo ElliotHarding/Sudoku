@@ -3,6 +3,7 @@
 #include "settings.h"
 #include "math.h"
 
+#include <QDebug>
 #include <QMouseEvent>
 
 DLG_Home::DLG_Home(QWidget *parent)
@@ -55,6 +56,17 @@ void DLG_Home::mousePressEvent(QMouseEvent *mouseEvent)
         m_selectedTile.setY(y);
 
         m_board[x][y]->setSelected(true);
+    }
+}
+
+void DLG_Home::keyPressEvent(QKeyEvent *event)
+{
+    if(m_selectedTile != Settings::UnselectedTile)
+    {
+        if(event->key() >= Qt::Key::Key_0 && event->key() <= Qt::Key::Key_9)
+        {
+            qDebug() << event->key();
+        }
     }
 }
 
