@@ -1,10 +1,14 @@
 #include "dlg_home.h"
 #include "ui_dlg_home.h"
 #include "settings.h"
+#include "math.h"
+
+#include <QMouseEvent>
 
 DLG_Home::DLG_Home(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::DLG_Home)
+    , m_selectedTile(Settings::UnselectedTile)
 {
     ui->setupUi(this);
 
@@ -31,5 +35,26 @@ DLG_Home::~DLG_Home()
     }
 
     delete ui;
+}
+
+void DLG_Home::mousePressEvent(QMouseEvent *mouseEvent)
+{
+    if(m_selectedTile != Settings::UnselectedTile)
+    {
+        m_board[m_selectedTile.x()][m_selectedTile.y()]->setSelected(false);
+    }
+
+    if(Settings::BoardRect.contains(mouseEvent->pos()))
+    {
+        const int xOffset = mouseEvent->pos().x() - Settings::BoardRect.x();
+        const int yOffset = mouseEvent->pos().y() - Settings::BoardRect.y();
+        const int x = floor(xOffset/Settings::TileSize);
+        const int y = floor(yOffset/Settings::TileSize);
+
+        m_selectedTile.setX(x);
+        m_selectedTile.setY(y);
+
+        m_board[x][y]->setSelected(true);
+    }
 }
 

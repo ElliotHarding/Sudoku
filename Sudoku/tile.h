@@ -12,6 +12,8 @@ public:
     void setValue(int value, bool permanent = false);
     int value();
 
+    void setSelected(bool selected);
+
     void reset();
 
 protected:
@@ -20,6 +22,7 @@ protected:
 private:
     int m_value;
     bool m_bPermanent;
+    bool m_bSelected;
 };
 
 #endif // TILE_H
