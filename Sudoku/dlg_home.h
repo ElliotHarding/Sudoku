@@ -2,6 +2,7 @@
 #define DLG_HOME_H
 
 #include <QMainWindow>
+#include "tile.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DLG_Home; }
@@ -17,5 +18,7 @@ public:
 
 private:
     Ui::DLG_Home *ui;
+
+    QVector<QVector<Tile*>> m_board;
 };
 #endif // DLG_HOME_H

@@ -17,10 +17,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     main.cpp \
-    dlg_home.cpp
+    dlg_home.cpp \
+    tile.cpp
 
 HEADERS += \
-    dlg_home.h
+    dlg_home.h \
+    settings.h \
+    tile.h
 
 FORMS += \
     dlg_home.ui
