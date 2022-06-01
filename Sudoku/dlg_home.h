@@ -25,5 +25,7 @@ private:
 
     QVector<QVector<Tile*>> m_board;
     Tile* m_pSelectedTile;
+
+    void generateBoard();
 };
 #endif // DLG_HOME_H

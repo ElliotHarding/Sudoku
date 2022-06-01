@@ -24,6 +24,8 @@ DLG_Home::DLG_Home(QWidget *parent)
 
     m_board[0][1]->setValue(5);
     m_board[0][1]->setPermanent(true);
+
+    generateBoard();
 }
 
 DLG_Home::~DLG_Home()
@@ -71,5 +73,38 @@ void DLG_Home::keyPressEvent(QKeyEvent *event)
             m_pSelectedTile->setValue(0);
         }
     }
+}
+
+void fillSubGrid(const std::vector<int> subGridOptions, QVector<QVector<Tile*>>& board, const int& startX, const int& startY)
+{
+    int x = startX;
+    int y = startY;
+
+    std::vector<int> randomSubGrid = subGridOptions;
+    std::random_shuffle(randomSubGrid.begin(), randomSubGrid.end());
+
+    for(size_t i = 0; i < randomSubGrid.size(); i++)
+    {
+        board[x][y]->setValue(randomSubGrid[i]);
+
+        if((i+1) % 3 == 0)
+        {
+            y++;
+            x=startX;
+        }
+        else
+        {
+            x++;
+        }
+    }
+}
+
+void DLG_Home::generateBoard()
+{
+    const std::vector<int> subGridOptions = {1,2,3,4,5,6,7,8,9};
+
+    fillSubGrid(subGridOptions, m_board, 0, 0);
+    fillSubGrid(subGridOptions, m_board, 3, 3);
+    fillSubGrid(subGridOptions, m_board, 6, 6);
 }
 
