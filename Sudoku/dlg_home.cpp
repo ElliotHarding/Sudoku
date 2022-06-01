@@ -15,6 +15,10 @@ DLG_Home::DLG_Home(QWidget *parent)
 {
     ui->setupUi(this);
 
+    m_pAiThread = new AiThread();
+    connect(m_pAiThread, SIGNAL(updateCell(const int&, const int&, const int&)), this, SLOT(updateCell(const int&, const int&, const int&)));
+    m_pAiThread->start();
+
     for(int x = 0; x < Settings::BoardCountX; x++)
     {
         m_board.push_back(QVector<Tile*>());
@@ -136,6 +140,43 @@ bool validPosition(QVector<QVector<Tile*>>& board, const int& xCheck, const int&
     return true;
 }
 
+bool validPosition(QVector<QVector<int>>& board, const int& xCheck, const int& yCheck, const int& numToCheck)
+{
+    //Check row
+    for(int col = 0; col < board.size(); col++)
+    {
+        if(board[col][yCheck] == numToCheck)
+        {
+            return false;
+        }
+    }
+
+    //Check col
+    for(int row = 0; row < board[0].size(); row++)
+    {
+        if(board[xCheck][row] == numToCheck)
+        {
+            return false;
+        }
+    }
+
+    //Check sub grid
+    const int subStartX = xCheck - (xCheck % 3);
+    const int subStartY = yCheck - (yCheck % 3);
+    for(int x = subStartX; x < subStartX + 3; x++)
+    {
+        for(int y = subStartY; y < subStartY + 3; y++)
+        {
+            if(board[x][y] == numToCheck)
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 bool fillBoardPossible(QVector<QVector<Tile*>>& board, const int& x, const int& y)
 {
     for(int newNum = 1; newNum < 10; newNum++)
@@ -244,4 +285,140 @@ void DLG_Home::generateBoard()
 void DLG_Home::on_btn_reset_clicked()
 {
     generateBoard();
+}
+
+void DLG_Home::on_btn_ai_clicked()
+{
+    QVector<QVector<int>> board = QVector<QVector<int>>(m_board.size(), QVector<int>(m_board[0].size(), 0));
+    for(int x = 0; x < m_board.size(); x++)
+    {
+        for(int y = 0; y < m_board[x].size(); y++)
+        {
+            board[x][y] = m_board[x][y]->value();
+        }
+    }
+    m_pAiThread->setBoard(board);
+}
+
+void DLG_Home::updateCell(const int &x, const int &y, const int &value)
+{
+    m_board[x][y]->setValue(value);
+}
+
+AiThread::AiThread() : QThread(),
+    m_bStop(false),
+    m_bWorkOnBoard(false)
+{
+}
+
+void AiThread::setBoard(const QVector<QVector<int>>& board)
+{
+    m_mutex.lock();
+    m_board = board;
+    m_bWorkOnBoard = true;
+    m_mutex.unlock();
+}
+
+void AiThread::setStop()
+{
+    m_mutex.lock();
+    m_bStop = true;
+    m_mutex.unlock();
+}
+
+bool AiThread::isSetStop()
+{
+    m_mutex.lock();
+    const bool isStop = m_bStop;
+    m_mutex.unlock();
+    return isStop;
+}
+
+void AiThread::run()
+{
+    while(true)
+    {
+        m_mutex.lock();
+        if(m_bStop)
+        {
+            m_mutex.unlock();
+            return;
+        }
+
+        if(m_bWorkOnBoard)
+        {
+#ifdef AI_DEBUG
+    clock_t start = clock();
+#endif
+            m_bWorkOnBoard = false;
+
+            QVector<QVector<int>> board = m_board;
+
+            m_mutex.unlock();
+
+            if(findSolution(board, 0, 0))
+            {
+                qDebug() << "AiThread::run - Ai found solution";
+            }
+            else
+            {
+                qDebug() << "AiThread::run - Ai failed";
+            }
+
+#ifdef AI_DEBUG
+    clock_t end = clock();
+    qDebug() << "AiThread::run: Think time: " << end - start;
+#endif
+        }
+        else
+        {
+            m_mutex.unlock();
+        }
+    }
+}
+
+bool AiThread::findSolution(QVector<QVector<int>>& board, const int &x, const int &y)
+{
+    for(int newNum = 1; newNum < 10; newNum++)
+    {
+        if(validPosition(board, x, y, newNum))
+        {
+            //Set board[x][y] to testing newNum
+            board[x][y] = newNum;
+            emit updateCell(x, y, newNum);
+
+            //Find next free board pos
+            int nextX = x;
+            int nextY = y;
+            while(board[nextX][nextY] != 0)
+            {
+                if(nextX > board.size()-2)
+                {
+                    nextX = 0;
+                    nextY++;
+
+                    //If reached the end of the board
+                    if(nextY == board[0].size())
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    nextX++;
+                }
+            }
+
+            //Try fill in rest of board with newNum in board pos x,y
+            if(findSolution(board, nextX, nextY))
+            {
+                return true;
+            }
+
+            board[x][y] = 0;
+            emit updateCell(x, y, 0);
+        }
+    }
+
+    return false;
 }

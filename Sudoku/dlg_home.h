@@ -1,12 +1,16 @@
 #ifndef DLG_HOME_H
 #define DLG_HOME_H
 
-#include <QMainWindow>
 #include "tile.h"
+
+#include <QMainWindow>
+#include <QMutex>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DLG_Home; }
 QT_END_NAMESPACE
+
+class AiThread;
 
 class DLG_Home : public QMainWindow
 {
@@ -21,7 +25,12 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
 
 private slots:
+    ///UI Button
     void on_btn_reset_clicked();
+    void on_btn_ai_clicked();
+
+    ///Ai
+    void updateCell(const int& x, const int& y, const int& value);
 
 private:
     Ui::DLG_Home *ui;
@@ -29,6 +38,35 @@ private:
     QVector<QVector<Tile*>> m_board;
     Tile* m_pSelectedTile;
 
+    ///AI
+    AiThread* m_pAiThread;
+
     void generateBoard();
 };
+
+#include <QThread>
+class AiThread : public QThread
+{
+        Q_OBJECT
+public:
+    AiThread();
+
+    void setBoard(const QVector<QVector<int>>& board);
+    void setStop();
+    bool isSetStop();
+
+    void run();
+
+signals:
+    void updateCell(const int& x, const int& y, const int& value);
+
+private:
+    bool findSolution(QVector<QVector<int>>& board, const int& x, const int& y);
+
+    QMutex m_mutex;
+    QVector<QVector<int>> m_board;
+    bool m_bStop;
+    bool m_bWorkOnBoard;
+};
+
 #endif // DLG_HOME_H
