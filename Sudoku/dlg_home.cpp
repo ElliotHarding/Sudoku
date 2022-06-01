@@ -6,6 +6,7 @@
 #include <random>
 #include <QDebug>
 #include <QMouseEvent>
+#include <QRandomGenerator>
 
 DLG_Home::DLG_Home(QWidget *parent)
     : QMainWindow(parent)
@@ -22,9 +23,6 @@ DLG_Home::DLG_Home(QWidget *parent)
             m_board[x].push_back(new Tile(this, Settings::BoardRect.left() + x * Settings::TileSize, Settings::BoardRect.top() + y * Settings::TileSize, Settings::TileSize, Settings::TileSize));
         }
     }
-
-    m_board[0][1]->setValue(5);
-    m_board[0][1]->setPermanent(true);
 
     generateBoard();
 }
@@ -196,6 +194,40 @@ void DLG_Home::generateBoard()
     else
     {
         qDebug() << "DLG_Home::generateBoard - Fill failed";
+    }
+
+    //Prep to clear random cells
+    // - Get a list of cells to keep
+    QList<QPoint> keptCells;
+    for(int i = 0; i < Settings::NumberOfCellsToKeepAfterGen;)
+    {
+        const int x = QRandomGenerator::global()->generateDouble() * m_board.size();
+        const int y = QRandomGenerator::global()->generateDouble() * m_board.size();
+        const QPoint cellToKeep = QPoint(x,y);
+        if(!keptCells.contains(cellToKeep))
+        {
+            keptCells.push_back(cellToKeep);
+            i++;
+        }
+    }
+
+    //Remove all cells except ones in keptCells
+    for(int x = 0; x < m_board.size(); x++)
+    {
+        for(int y = 0; y < m_board[x].size(); y++)
+        {
+            const QPoint boardLocation = QPoint(x,y);
+            if(!keptCells.contains(boardLocation))
+            {
+                m_board[x][y]->setValue(0);
+                m_board[x][y]->setPermanent(false);
+            }
+            else
+            {
+                keptCells.removeOne(boardLocation);
+                m_board[x][y]->setPermanent(true);
+            }
+        }
     }
 }
 
