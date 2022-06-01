@@ -24,9 +24,6 @@ private:
     Ui::DLG_Home *ui;
 
     QVector<QVector<Tile*>> m_board;
-
-    QPoint m_selectedTile;
-
-    void trySetValue(const QPoint& location, const int& value);
+    Tile* m_pSelectedTile;
 };
 #endif // DLG_HOME_H

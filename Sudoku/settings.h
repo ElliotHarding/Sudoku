@@ -15,9 +15,6 @@ const QColor TileTextColorEditable = Qt::blue;
 const QFont TileTextFont = QFont("Helvetica [Cronyx]", 10, QFont::Normal);
 const QFontMetrics TileTextFontMetrics(TileTextFont);
 
-///Seleted tile
-const QPoint UnselectedTile(-1,-1);
-
 ///Board
 const int BoardCountX = 9;
 const int BoardCountY = 9;

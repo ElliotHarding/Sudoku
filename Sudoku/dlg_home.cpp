@@ -9,7 +9,7 @@
 DLG_Home::DLG_Home(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::DLG_Home)
-    , m_selectedTile(Settings::UnselectedTile)
+    , m_pSelectedTile(nullptr)
 {
     ui->setupUi(this);
 
@@ -41,9 +41,9 @@ DLG_Home::~DLG_Home()
 
 void DLG_Home::mousePressEvent(QMouseEvent *mouseEvent)
 {
-    if(m_selectedTile != Settings::UnselectedTile)
+    if(m_pSelectedTile)
     {
-        m_board[m_selectedTile.x()][m_selectedTile.y()]->setSelected(false);
+        m_pSelectedTile->setSelected(false);
     }
 
     if(Settings::BoardRect.contains(mouseEvent->pos()))
@@ -53,33 +53,23 @@ void DLG_Home::mousePressEvent(QMouseEvent *mouseEvent)
         const int x = floor(xOffset/Settings::TileSize);
         const int y = floor(yOffset/Settings::TileSize);
 
-        m_selectedTile.setX(x);
-        m_selectedTile.setY(y);
-
-        m_board[x][y]->setSelected(true);
+        m_pSelectedTile = m_board[x][y];
+        m_pSelectedTile->setSelected(true);
     }
 }
 
 void DLG_Home::keyPressEvent(QKeyEvent *event)
 {
-    if(m_selectedTile != Settings::UnselectedTile)
+    if(m_pSelectedTile && !m_pSelectedTile->isPermanent())
     {
         if(event->key() >= Qt::Key::Key_0 && event->key() <= Qt::Key::Key_9)
         {
-            trySetValue(m_selectedTile, event->key() - 48);
+            m_pSelectedTile->setValue(event->key() - 48);
         }
         else if(event->key() == Qt::Key::Key_Backspace || event->key() == Qt::Key::Key_Delete)
         {
-            trySetValue(m_selectedTile, 0);
+            m_pSelectedTile->setValue(0);
         }
-    }
-}
-
-void DLG_Home::trySetValue(const QPoint& location, const int& value)
-{
-    if(!m_board[location.x()][location.y()]->isPermanent())
-    {
-        m_board[location.x()][location.y()]->setValue(value);
     }
 }
 
