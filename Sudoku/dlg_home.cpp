@@ -3,6 +3,7 @@
 #include "settings.h"
 #include "math.h"
 
+#include <random>
 #include <QDebug>
 #include <QMouseEvent>
 
@@ -75,12 +76,15 @@ void DLG_Home::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void fillSubGrid(const std::vector<int> subGridOptions, QVector<QVector<Tile*>>& board, const int& startX, const int& startY)
+void randomlyFillSubGrid(QVector<QVector<Tile*>>& board, const int& startX, const int& startY)
 {
     int x = startX;
     int y = startY;
 
-    std::vector<int> randomSubGrid = subGridOptions;
+    std::random_device r;
+    std::seed_seq seed{r(), r(), r(), r(), r(), r(), r(), r()};
+    std::mt19937 eng(seed);
+    std::vector<int> randomSubGrid = Settings::SubGridOptions;
     std::random_shuffle(randomSubGrid.begin(), randomSubGrid.end());
 
     for(size_t i = 0; i < randomSubGrid.size(); i++)
@@ -99,12 +103,101 @@ void fillSubGrid(const std::vector<int> subGridOptions, QVector<QVector<Tile*>>&
     }
 }
 
+bool validPosition(QVector<QVector<Tile*>>& board, const int& xCheck, const int& yCheck, const int& numToCheck)
+{
+    //Check row
+    for(int col = 0; col < board.size(); col++)
+    {
+        if(board[col][yCheck]->value() == numToCheck)
+        {
+            return false;
+        }
+    }
+
+    //Check col
+    for(int row = 0; row < board[0].size(); row++)
+    {
+        if(board[xCheck][row]->value() == numToCheck)
+        {
+            return false;
+        }
+    }
+
+    //Check sub grid
+    const int subStartX = xCheck - (xCheck % 3);
+    const int subStartY = yCheck - (yCheck % 3);
+    for(int x = subStartX; x < subStartX + 3; x++)
+    {
+        for(int y = subStartY; y < subStartY + 3; y++)
+        {
+            if(board[x][y]->value() == numToCheck)
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+bool fillBoardPossible(QVector<QVector<Tile*>>& board, const int& x, const int& y)
+{
+    for(int newNum = 1; newNum < 10; newNum++)
+    {
+        if(validPosition(board, x, y, newNum))
+        {
+            //Set board[x][y] to testing newNum
+            board[x][y]->setValue(newNum);
+
+            //Find next free board pos
+            int nextX = x;
+            int nextY = y;
+            while(board[nextX][nextY]->value() != 0)
+            {
+                if(nextX > board.size()-2)
+                {
+                    nextX = 0;
+                    nextY++;
+
+                    //If reached the end of the board
+                    if(nextY == board[0].size())
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    nextX++;
+                }
+            }
+
+            //Try fill in rest of board with newNum in board pos x,y
+            if(fillBoardPossible(board, nextX, nextY))
+            {
+                return true;
+            }
+
+            board[x][y]->setValue(0);
+        }
+    }
+
+    return false;
+}
+
 void DLG_Home::generateBoard()
 {
-    const std::vector<int> subGridOptions = {1,2,3,4,5,6,7,8,9};
+    randomlyFillSubGrid(m_board, 0, 0);
+    randomlyFillSubGrid(m_board, 3, 3);
+    randomlyFillSubGrid(m_board, 6, 6);
 
-    fillSubGrid(subGridOptions, m_board, 0, 0);
-    fillSubGrid(subGridOptions, m_board, 3, 3);
-    fillSubGrid(subGridOptions, m_board, 6, 6);
+    //Try fill rest of board
+    if(fillBoardPossible(m_board, 3, 0))
+    {
+        qDebug() << "DLG_Home::generateBoard - Filled successfully";
+    }
+    else
+    {
+        qDebug() << "DLG_Home::generateBoard - Fill failed";
+    }
 }
 
