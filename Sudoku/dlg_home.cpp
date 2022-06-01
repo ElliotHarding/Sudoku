@@ -81,11 +81,9 @@ void randomlyFillSubGrid(QVector<QVector<Tile*>>& board, const int& startX, cons
     int x = startX;
     int y = startY;
 
-    std::random_device r;
-    std::seed_seq seed{r(), r(), r(), r(), r(), r(), r(), r()};
-    std::mt19937 eng(seed);
+    std::mt19937 eng(clock());
     std::vector<int> randomSubGrid = Settings::SubGridOptions;
-    std::random_shuffle(randomSubGrid.begin(), randomSubGrid.end());
+    std::shuffle(randomSubGrid.begin(), randomSubGrid.end(), eng);
 
     for(size_t i = 0; i < randomSubGrid.size(); i++)
     {
