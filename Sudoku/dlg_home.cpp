@@ -182,6 +182,16 @@ bool fillBoardPossible(QVector<QVector<Tile*>>& board, const int& x, const int& 
 
 void DLG_Home::generateBoard()
 {
+    //Reset board
+    for(int x = 0; x < m_board.size(); x++)
+    {
+        for(int y = 0; y < m_board[x].size(); y++)
+        {
+            m_board[x][y]->setValue(0);
+        }
+    }
+
+    //Diagonally fill centeral subgrids
     randomlyFillSubGrid(m_board, 0, 0);
     randomlyFillSubGrid(m_board, 3, 3);
     randomlyFillSubGrid(m_board, 6, 6);
@@ -231,3 +241,7 @@ void DLG_Home::generateBoard()
     }
 }
 
+void DLG_Home::on_btn_reset_clicked()
+{
+    generateBoard();
+}

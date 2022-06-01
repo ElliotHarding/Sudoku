@@ -20,6 +20,9 @@ protected:
     void mousePressEvent(QMouseEvent* mouseEvent) override;
     void keyPressEvent(QKeyEvent *event) override;
 
+private slots:
+    void on_btn_reset_clicked();
+
 private:
     Ui::DLG_Home *ui;
 
