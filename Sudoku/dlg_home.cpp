@@ -334,6 +334,29 @@ bool AiThread::isSetStop()
     return isStop;
 }
 
+bool findFirstEmptySpot(const QVector<QVector<int>>& board, int& x, int& y)
+{
+    while(board[x][y] != 0)
+    {
+        if(x > board.size()-2)
+        {
+            x = 0;
+            y++;
+
+            if(y == board[0].size())
+            {
+                return false;
+            }
+        }
+        else
+        {
+            x++;
+        }
+    }
+
+    return true;
+}
+
 void AiThread::run()
 {
     while(true)
@@ -356,14 +379,24 @@ void AiThread::run()
 
             m_mutex.unlock();
 
-            if(findSolution(board, 0, 0))
+            int x = 0;
+            int y = 0;
+            if(findFirstEmptySpot(board, x, y))
             {
-                qDebug() << "AiThread::run - Ai found solution";
+                if(findSolution(board, x, y))
+                {
+                    qDebug() << "AiThread::run - Ai found solution";
+                }
+                else
+                {
+                    qDebug() << "AiThread::run - Ai failed";
+                }
             }
             else
             {
-                qDebug() << "AiThread::run - Ai failed";
+                qDebug() << "AiThread::run - set board is full";
             }
+
 
 #ifdef AI_DEBUG
     clock_t end = clock();
@@ -390,23 +423,9 @@ bool AiThread::findSolution(QVector<QVector<int>>& board, const int &x, const in
             //Find next free board pos
             int nextX = x;
             int nextY = y;
-            while(board[nextX][nextY] != 0)
+            if(!findFirstEmptySpot(board, nextX, nextY))
             {
-                if(nextX > board.size()-2)
-                {
-                    nextX = 0;
-                    nextY++;
-
-                    //If reached the end of the board
-                    if(nextY == board[0].size())
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    nextX++;
-                }
+                return true;
             }
 
             //Try fill in rest of board with newNum in board pos x,y
