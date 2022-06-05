@@ -18,6 +18,8 @@ const QFontMetrics TileTextFontMetrics(TileTextFont);
 ///Board
 const int BoardCountX = 9;
 const int BoardCountY = 9;
+const int SubGridCountX = 3;
+const int SubGridCountY = 3;
 const QRect BoardRect(0, 0, TileSize * BoardCountX, TileSize * BoardCountY);
 
 ///Board gen

@@ -100,7 +100,7 @@ void randomlyFillSubGrid(QVector<QVector<Tile*>>& board, const int& startX, cons
     {
         board[x][y]->setValue(randomSubGrid[i]);
 
-        if((i+1) % 3 == 0)
+        if((i+1) % Settings::SubGridCountX == 0)
         {
             y++;
             x=startX;
@@ -170,11 +170,11 @@ bool validPosition(QVector<QVector<int>>& board, const int& xCheck, const int& y
     }
 
     //Check sub grid
-    const int subStartX = xCheck - (xCheck % 3);
-    const int subStartY = yCheck - (yCheck % 3);
-    for(int x = subStartX; x < subStartX + 3; x++)
+    const int subStartX = xCheck - (xCheck % Settings::SubGridCountX);
+    const int subStartY = yCheck - (yCheck % Settings::SubGridCountY);
+    for(int x = subStartX; x < subStartX + Settings::SubGridCountX; x++)
     {
-        for(int y = subStartY; y < subStartY + 3; y++)
+        for(int y = subStartY; y < subStartY + Settings::SubGridCountY; y++)
         {
             if(board[x][y] == numToCheck)
             {
@@ -188,7 +188,7 @@ bool validPosition(QVector<QVector<int>>& board, const int& xCheck, const int& y
 
 bool fillBoardPossible(QVector<QVector<Tile*>>& board, const int& x, const int& y)
 {
-    for(int newNum = 1; newNum < 10; newNum++)
+    for(int newNum : Settings::SubGridOptions)
     {
         if(validPosition(board, x, y, newNum))
         {
@@ -421,7 +421,7 @@ void AiThread::run()
 
 bool AiThread::findSolution(QVector<QVector<int>>& board, const int &x, const int &y)
 {
-    for(int newNum = 1; newNum < 10; newNum++)
+    for(int newNum : Settings::SubGridOptions)
     {
         if(validPosition(board, x, y, newNum))
         {
