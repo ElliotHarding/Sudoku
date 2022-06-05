@@ -301,15 +301,18 @@ void DLG_Home::on_btn_reset_clicked()
 
 void DLG_Home::on_btn_ai_clicked()
 {
-    QVector<QVector<int>> board = QVector<QVector<int>>(m_board.size(), QVector<int>(m_board[0].size(), 0));
-    for(int x = 0; x < m_board.size(); x++)
+    if(!m_pAiThread->isWorking())
     {
-        for(int y = 0; y < m_board[x].size(); y++)
+        QVector<QVector<int>> board = QVector<QVector<int>>(m_board.size(), QVector<int>(m_board[0].size(), 0));
+        for(int x = 0; x < m_board.size(); x++)
         {
-            board[x][y] = m_board[x][y]->value();
+            for(int y = 0; y < m_board[x].size(); y++)
+            {
+                board[x][y] = m_board[x][y]->value();
+            }
         }
+        m_pAiThread->setBoard(board);
     }
-    m_pAiThread->setBoard(board);
 }
 
 void DLG_Home::updateCell(const int &x, const int &y, const int &value)

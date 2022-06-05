@@ -24,7 +24,7 @@ const QRect BoardRect(0, 0, TileSize * BoardCountX, TileSize * BoardCountY);
 
 ///Board gen
 const std::vector<int> SubGridOptions = {1,2,3,4,5,6,7,8,9};
-const int NumberOfCellsToKeepAfterGen = 16;
+const int NumberOfCellsToKeepAfterGen = 20;
 
 }
 
