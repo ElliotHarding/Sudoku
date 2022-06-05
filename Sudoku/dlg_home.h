@@ -54,6 +54,7 @@ public:
     void setBoard(const QVector<QVector<int>>& board);
     void setStop();
     bool isSetStop();
+    bool isWorking();
 
     void run();
 
@@ -67,6 +68,7 @@ private:
     QVector<QVector<int>> m_board;
     bool m_bStop;
     bool m_bWorkOnBoard;
+    bool m_bWoring;
 };
 
 #endif // DLG_HOME_H

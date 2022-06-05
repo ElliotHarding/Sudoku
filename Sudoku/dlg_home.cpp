@@ -74,7 +74,7 @@ void DLG_Home::mousePressEvent(QMouseEvent *mouseEvent)
 
 void DLG_Home::keyPressEvent(QKeyEvent *event)
 {
-    if(m_pSelectedTile && !m_pSelectedTile->isPermanent())
+    if(m_pSelectedTile && !m_pSelectedTile->isPermanent() && !m_pAiThread->isWorking())
     {
         if(event->key() >= Qt::Key::Key_0 && event->key() <= Qt::Key::Key_9)
         {
@@ -293,7 +293,10 @@ void DLG_Home::generateBoard()
 
 void DLG_Home::on_btn_reset_clicked()
 {
-    generateBoard();
+    if(!m_pAiThread->isWorking())
+    {
+        generateBoard();
+    }
 }
 
 void DLG_Home::on_btn_ai_clicked()
@@ -316,7 +319,8 @@ void DLG_Home::updateCell(const int &x, const int &y, const int &value)
 
 AiThread::AiThread() : QThread(),
     m_bStop(false),
-    m_bWorkOnBoard(false)
+    m_bWorkOnBoard(false),
+    m_bWoring(false)
 {
 }
 
@@ -341,6 +345,14 @@ bool AiThread::isSetStop()
     const bool isStop = m_bStop;
     m_mutex.unlock();
     return isStop;
+}
+
+bool AiThread::isWorking()
+{
+    m_mutex.lock();
+    const bool working = m_bWoring;
+    m_mutex.unlock();
+    return working;
 }
 
 bool findFirstEmptySpot(const QVector<QVector<int>>& board, int& x, int& y)
@@ -371,6 +383,8 @@ void AiThread::run()
     while(true)
     {
         m_mutex.lock();
+
+
         if(m_bStop)
         {
             m_mutex.unlock();
@@ -383,6 +397,7 @@ void AiThread::run()
     clock_t start = clock();
 #endif
             m_bWorkOnBoard = false;
+            m_bWoring = true;
 
             QVector<QVector<int>> board = m_board;
 
@@ -406,16 +421,16 @@ void AiThread::run()
                 qDebug() << "AiThread::run - set board is full";
             }
 
-
 #ifdef AI_DEBUG
     clock_t end = clock();
     qDebug() << "AiThread::run: Think time: " << end - start;
 #endif
+
+            m_mutex.lock();
+            m_bWoring = false;
         }
-        else
-        {
-            m_mutex.unlock();
-        }
+
+        m_mutex.unlock();
     }
 }
 
