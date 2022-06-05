@@ -41,6 +41,15 @@ DLG_Home::~DLG_Home()
         }
     }
 
+    //Stop ai thread
+    m_pAiThread->setStop();
+    while(!m_pAiThread->isSetStop())
+    {
+        QThread::sleep(1);
+    }
+    m_pAiThread->terminate();
+    delete m_pAiThread;
+
     delete ui;
 }
 
