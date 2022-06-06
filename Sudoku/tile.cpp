@@ -3,7 +3,7 @@
 
 #include <QPainter>
 
-Tile::Tile(QWidget* parent, const int& x, const int& y, const int& w, const int& h) : QWidget(parent),
+Tile::Tile(QWidget* parent, const uint& x, const uint& y, const uint& w, const uint& h) : QWidget(parent),
     m_value(0),
     m_bPermanent(false),
     m_bSelected(false)
@@ -11,13 +11,13 @@ Tile::Tile(QWidget* parent, const int& x, const int& y, const int& w, const int&
     setGeometry(x, y, w, h);
 }
 
-void Tile::setValue(int value)
+void Tile::setValue(uint value)
 {
     m_value = value;
     update();
 }
 
-int Tile::value()
+uint Tile::value()
 {
     return m_value;
 }
@@ -49,22 +49,22 @@ void Tile::paintEvent(QPaintEvent*)
 {
     if(m_value != 0 || m_bSelected)
     {
-        QPainter painter(this);
-        painter.setPen(m_bPermanent ? Settings::TileTextColorPermanent : Settings::TileTextColorEditable);
+        QPainter pauinter(this);
+        pauinter.setPen(m_bPermanent ? Settings::TileTextColorPermanent : Settings::TileTextColorEditable);
 
         if(m_value != 0)
         {
             //Prep value text drawing
-            painter.setFont(Settings::TileTextFont);
+            pauinter.setFont(Settings::TileTextFont);
             const float textWidth = Settings::TileTextFontMetrics.horizontalAdvance(m_value);
 
             //Draw value text
-            painter.drawText(QPoint(Settings::TileSize/2 - textWidth/2, Settings::TileSize/2 + Settings::TileTextFontMetrics.height()/4), QString::number(m_value));
+            pauinter.drawText(QPoint(Settings::TileSize/2 - textWidth/2, Settings::TileSize/2 + Settings::TileTextFontMetrics.height()/4), QString::number(m_value));
         }
 
         if(m_bSelected)
         {
-            painter.drawRect(QRect(0, 0, Settings::TileSize-1, Settings::TileSize-1));
+            pauinter.drawRect(QRect(0, 0, Settings::TileSize-1, Settings::TileSize-1));
         }
     }
 }

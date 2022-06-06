@@ -20,15 +20,15 @@ DLG_Home::DLG_Home(QWidget *parent)
     ui->setupUi(this);
 
     m_pAiThread = new AiThread();
-    connect(m_pAiThread, SIGNAL(updateCell(const int&, const int&, const int&)), this, SLOT(updateCell(const int&, const int&, const int&)));
-    qRegisterMetaType<std::vector<std::vector<int>>>("std::vector<std::vector<int>>");
-    connect(m_pAiThread, SIGNAL(updateBoard(const std::vector<std::vector<int>>&)), this, SLOT(updateBoard(const std::vector<std::vector<int>>&)));
+    connect(m_pAiThread, SIGNAL(updateCell(const uint&, const uint&, const uint&)), this, SLOT(updateCell(const uint&, const uint&, const uint&)));
+    qRegisterMetaType<std::vector<std::vector<uint>>>("std::vector<std::vector<uint>>");
+    connect(m_pAiThread, SIGNAL(updateBoard(const std::vector<std::vector<uint>>&)), this, SLOT(updateBoard(const std::vector<std::vector<uint>>&)));
     m_pAiThread->start();
 
-    for(int x = 0; x < Settings::BoardCountX; x++)
+    for(uint x = 0; x < Settings::BoardCountX; x++)
     {
         m_board.push_back(std::vector<Tile*>());
-        for(int y = 0; y < Settings::BoardCountY; y++)
+        for(uint y = 0; y < Settings::BoardCountY; y++)
         {
             m_board[x].push_back(new Tile(this, Settings::BoardRect.left() + x * Settings::TileSize, Settings::BoardRect.top() + y * Settings::TileSize, Settings::TileSize, Settings::TileSize));
         }
@@ -41,9 +41,9 @@ DLG_Home::DLG_Home(QWidget *parent)
 
 DLG_Home::~DLG_Home()
 {
-    for(int x = 0; x < Settings::BoardCountX; x++)
+    for(uint x = 0; x < Settings::BoardCountX; x++)
     {
-        for(int y = 0; y < Settings::BoardCountY; y++)
+        for(uint y = 0; y < Settings::BoardCountY; y++)
         {
             delete m_board[x][y];
         }
@@ -70,10 +70,10 @@ void DLG_Home::mousePressEvent(QMouseEvent *mouseEvent)
 
     if(Settings::BoardRect.contains(mouseEvent->pos()))
     {
-        const int xOffset = mouseEvent->pos().x() - Settings::BoardRect.x();
-        const int yOffset = mouseEvent->pos().y() - Settings::BoardRect.y();
-        const int x = floor(xOffset/Settings::TileSize);
-        const int y = floor(yOffset/Settings::TileSize);
+        const uint xOffset = mouseEvent->pos().x() - Settings::BoardRect.x();
+        const uint yOffset = mouseEvent->pos().y() - Settings::BoardRect.y();
+        const uint x = floor(xOffset/Settings::TileSize);
+        const uint y = floor(yOffset/Settings::TileSize);
 
         m_pSelectedTile = m_board[x][y];
         m_pSelectedTile->setSelected(true);
@@ -95,13 +95,13 @@ void DLG_Home::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void randomlyFillSubGrid(std::vector<std::vector<int>>& board, const int& startX, const int& startY)
+void randomlyFillSubGrid(std::vector<std::vector<uint>>& board, const uint& startX, const uint& startY)
 {
-    int x = startX;
-    int y = startY;
+    uint x = startX;
+    uint y = startY;
 
     std::mt19937 eng(clock());
-    std::vector<int> randomSubGrid = Settings::SubGridOptions;
+    std::vector<uint> randomSubGrid = Settings::SubGridOptions;
     std::shuffle(randomSubGrid.begin(), randomSubGrid.end(), eng);
 
     for(size_t i = 0; i < randomSubGrid.size(); i++)
@@ -120,10 +120,10 @@ void randomlyFillSubGrid(std::vector<std::vector<int>>& board, const int& startX
     }
 }
 
-bool validPosition(std::vector<std::vector<int>>& board, const int& xCheck, const int& yCheck, const int& numToCheck)
+bool validPosition(std::vector<std::vector<uint>>& board, const uint& xCheck, const uint& yCheck, const uint& numToCheck)
 {
     //Check row
-    for(int col = 0; col < board.size(); col++)
+    for(uint col = 0; col < board.size(); col++)
     {
         if(board[col][yCheck] == numToCheck)
         {
@@ -132,7 +132,7 @@ bool validPosition(std::vector<std::vector<int>>& board, const int& xCheck, cons
     }
 
     //Check col
-    for(int row = 0; row < board[0].size(); row++)
+    for(uint row = 0; row < board[0].size(); row++)
     {
         if(board[xCheck][row] == numToCheck)
         {
@@ -141,11 +141,11 @@ bool validPosition(std::vector<std::vector<int>>& board, const int& xCheck, cons
     }
 
     //Check sub grid
-    const int subStartX = xCheck - (xCheck % Settings::SubGridCountX);
-    const int subStartY = yCheck - (yCheck % Settings::SubGridCountY);
-    for(int x = subStartX; x < subStartX + Settings::SubGridCountX; x++)
+    const uint subStartX = xCheck - (xCheck % Settings::SubGridCountX);
+    const uint subStartY = yCheck - (yCheck % Settings::SubGridCountY);
+    for(uint x = subStartX; x < subStartX + Settings::SubGridCountX; x++)
     {
-        for(int y = subStartY; y < subStartY + Settings::SubGridCountY; y++)
+        for(uint y = subStartY; y < subStartY + Settings::SubGridCountY; y++)
         {
             if(board[x][y] == numToCheck)
             {
@@ -157,7 +157,7 @@ bool validPosition(std::vector<std::vector<int>>& board, const int& xCheck, cons
     return true;
 }
 
-bool findNextEmptySpot(const std::vector<std::vector<int>>& board, int& x, int& y)
+bool findNextEmptySpot(const std::vector<std::vector<uint>>& board, uint& x, uint& y)
 {
     while(board[x][y] != 0)
     {
@@ -180,9 +180,9 @@ bool findNextEmptySpot(const std::vector<std::vector<int>>& board, int& x, int& 
     return true;
 }
 
-bool fillBoardPossible(std::vector<std::vector<int>>& board, const int& x, const int& y)
+bool fillBoardPossible(std::vector<std::vector<uint>>& board, const uint& x, const uint& y)
 {
-    for(int newNum : Settings::SubGridOptions)
+    for(uint newNum : Settings::SubGridOptions)
     {
         if(validPosition(board, x, y, newNum))
         {
@@ -190,8 +190,8 @@ bool fillBoardPossible(std::vector<std::vector<int>>& board, const int& x, const
             board[x][y] = newNum;
 
             //Find next free board pos
-            int nextX = x;
-            int nextY = y;
+            uint nextX = x;
+            uint nextY = y;
             if(!findNextEmptySpot(board, nextX, nextY))
             {
                 return true;
@@ -216,7 +216,7 @@ void DLG_Home::generateBoard()
     // - Remove all but except Settings::NumberOfCellsToKeepAfterGen in random locations
     // - Set m_board to remaning values
 
-    std::vector<std::vector<int>> boardToFill = std::vector<std::vector<int>>(m_board.size(), std::vector<int>(m_board[0].size(), 0));
+    std::vector<std::vector<uint>> boardToFill = std::vector<std::vector<uint>>(m_board.size(), std::vector<uint>(m_board[0].size(), 0));
 
     //Diagonally fill centeral subgrids
     randomlyFillSubGrid(boardToFill, 0, 0);
@@ -236,10 +236,10 @@ void DLG_Home::generateBoard()
     //Prep to clear random cells
     // - Get a list of cells to keep
     QList<QPoint> keptCells;
-    for(int i = 0; i < Settings::NumberOfCellsToKeepAfterGen;)
+    for(uint i = 0; i < Settings::NumberOfCellsToKeepAfterGen;)
     {
-        const int x = QRandomGenerator::global()->generateDouble() * m_board.size();
-        const int y = QRandomGenerator::global()->generateDouble() * m_board.size();
+        const uint x = QRandomGenerator::global()->generateDouble() * m_board.size();
+        const uint y = QRandomGenerator::global()->generateDouble() * m_board.size();
         const QPoint cellToKeep = QPoint(x,y);
         if(!keptCells.contains(cellToKeep))
         {
@@ -249,9 +249,9 @@ void DLG_Home::generateBoard()
     }
 
     //Remove all cells except ones in keptCells
-    for(int x = 0; x < m_board.size(); x++)
+    for(uint x = 0; x < m_board.size(); x++)
     {
-        for(int y = 0; y < m_board[x].size(); y++)
+        for(uint y = 0; y < m_board[x].size(); y++)
         {
             const QPoint boardLocation = QPoint(x,y);
             if(!keptCells.contains(boardLocation))
@@ -283,7 +283,7 @@ void DLG_Home::on_btn_ai_clicked()
     {
         #ifdef AI_DEBUG
 
-            std::vector<std::vector<int>> board = {{0,0,0, 0,0,0, 0,8,0},
+            std::vector<std::vector<uint>> board = {{0,0,0, 0,0,0, 0,8,0},
                                            {4,0,0, 0,0,0, 0,0,7},
                                            {0,8,0, 7,0,0, 0,0,0},
 
@@ -295,9 +295,9 @@ void DLG_Home::on_btn_ai_clicked()
                                            {9,0,0, 0,0,0, 0,0,0},
                                            {0,6,0, 0,0,1, 9,5,0}};
 
-            for(int x = 0; x < board.size(); x++)
+            for(uint x = 0; x < board.size(); x++)
             {
-                for(int y = 0; y < board[x].size(); y++)
+                for(uint y = 0; y < board[x].size(); y++)
                 {
                     m_board[x][y]->setValue(board[x][y]);
                     m_board[x][y]->setPermanent(board[x][y] != 0);
@@ -306,10 +306,10 @@ void DLG_Home::on_btn_ai_clicked()
 
         #else
 
-            std::vector<std::vector<int>> board = std::vector<std::vector<int>>(m_board.size(), std::vector<int>(m_board[0].size(), 0));
-            for(int x = 0; x < m_board.size(); x++)
+            std::vector<std::vector<uint>> board = std::vector<std::vector<uint>>(m_board.size(), std::vector<uint>(m_board[0].size(), 0));
+            for(uint x = 0; x < m_board.size(); x++)
             {
-                for(int y = 0; y < m_board[x].size(); y++)
+                for(uint y = 0; y < m_board[x].size(); y++)
                 {
                     board[x][y] = m_board[x][y]->value();
                 }
@@ -321,16 +321,16 @@ void DLG_Home::on_btn_ai_clicked()
     }
 }
 
-void DLG_Home::updateCell(const int &x, const int &y, const int &value)
+void DLG_Home::updateCell(const uint &x, const uint &y, const uint &value)
 {
     m_board[x][y]->setValue(value);
 }
 
-void DLG_Home::updateBoard(const std::vector<std::vector<int>>& board)
+void DLG_Home::updateBoard(const std::vector<std::vector<uint>>& board)
 {
-    for(int x = 0; x < board.size(); x++)
+    for(uint x = 0; x < board.size(); x++)
     {
-        for(int y = 0; y < board[x].size(); y++)
+        for(uint y = 0; y < board[x].size(); y++)
         {
             m_board[x][y]->setValue(board[x][y]);
         }
@@ -347,7 +347,7 @@ AiThread::AiThread() : QThread(),
 {
 }
 
-void AiThread::setBoard(const std::vector<std::vector<int>>& board)
+void AiThread::setBoard(const std::vector<std::vector<uint>>& board)
 {
     if(!m_bWorking)
     {
@@ -381,8 +381,8 @@ void AiThread::run()
     clock_t start = clock();
 #endif
 
-            int x = 0;
-            int y = 0;
+            uint x = 0;
+            uint y = 0;
             if(findNextEmptySpot(m_board, x, y))
             {
                 if(findSolution(m_board, x, y))
@@ -412,10 +412,10 @@ void AiThread::run()
     }
 }
 
-bool AiThread::findSolution(std::vector<std::vector<int>>& board, const int x, const int y)
+bool AiThread::findSolution(std::vector<std::vector<uint>>& board, const uint x, const uint y)
 {
     //Try all possible options
-    for(int newNum : Settings::SubGridOptions)
+    for(uint newNum : Settings::SubGridOptions)
     {
         if(validPosition(board, x, y, newNum))
         {

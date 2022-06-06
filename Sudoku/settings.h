@@ -7,7 +7,7 @@
 namespace Settings
 {
 ///Tile size
-const int TileSize = 50;
+const uint TileSize = 50;
 
 ///Tile text
 const QColor TileTextColorPermanent = Qt::black;
@@ -16,15 +16,15 @@ const QFont TileTextFont = QFont("Helvetica [Cronyx]", 10, QFont::Normal);
 const QFontMetrics TileTextFontMetrics(TileTextFont);
 
 ///Board
-const int BoardCountX = 9;
-const int BoardCountY = 9;
-const int SubGridCountX = 3;
-const int SubGridCountY = 3;
+const uint BoardCountX = 9;
+const uint BoardCountY = 9;
+const uint SubGridCountX = 3;
+const uint SubGridCountY = 3;
 const QRect BoardRect(0, 0, TileSize * BoardCountX, TileSize * BoardCountY);
 
 ///Board gen
-const std::vector<int> SubGridOptions = {1,2,3,4,5,6,7,8,9};
-const int NumberOfCellsToKeepAfterGen = 20;
+const std::vector<uint> SubGridOptions = {1,2,3,4,5,6,7,8,9};
+const uint NumberOfCellsToKeepAfterGen = 20;
 
 }
 
