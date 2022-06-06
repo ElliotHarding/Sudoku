@@ -39,12 +39,12 @@ private slots:
 
     ///Ai
     void updateCell(const int& x, const int& y, const int& value);
-    void updateBoard(const QVector<QVector<int>>& board);
+    void updateBoard(const std::vector<std::vector<int>>& board);
 
 private:
     Ui::DLG_Home *ui;
 
-    QVector<QVector<Tile*>> m_board;
+    std::vector<std::vector<Tile*>> m_board;
     Tile* m_pSelectedTile;
 
     ///AI
@@ -63,7 +63,7 @@ class AiThread : public QThread
 public:
     AiThread();
 
-    void setBoard(const QVector<QVector<int>>& board);
+    void setBoard(const std::vector<std::vector<int>>& board);
     void setStop();
     bool isWorking();
 
@@ -71,17 +71,17 @@ public:
 
 signals:
     void updateCell(const int& x, const int& y, const int& value);
-    void updateBoard(const QVector<QVector<int>>& board);
+    void updateBoard(const std::vector<std::vector<int>>& board);
 
 private:
-    bool findSolution(QVector<QVector<int>>& board, const int x, const int y);
+    bool findSolution(std::vector<std::vector<int>>& board, const int x, const int y);
 
     ///Atomic flags
     std::atomic<bool> m_bStop;
     std::atomic<bool> m_bWorking;
 
     ///Memory
-    QVector<QVector<int>> m_board;
+    std::vector<std::vector<int>> m_board;
     int m_nextX;
     int m_nextY;
 };

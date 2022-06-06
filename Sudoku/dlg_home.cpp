@@ -21,13 +21,13 @@ DLG_Home::DLG_Home(QWidget *parent)
 
     m_pAiThread = new AiThread();
     connect(m_pAiThread, SIGNAL(updateCell(const int&, const int&, const int&)), this, SLOT(updateCell(const int&, const int&, const int&)));
-    qRegisterMetaType<QVector<QVector<int>>>("QVector<QVector<int>>");
-    connect(m_pAiThread, SIGNAL(updateBoard(const QVector<QVector<int>>&)), this, SLOT(updateBoard(const QVector<QVector<int>>&)));
+    qRegisterMetaType<std::vector<std::vector<int>>>("std::vector<std::vector<int>>");
+    connect(m_pAiThread, SIGNAL(updateBoard(const std::vector<std::vector<int>>&)), this, SLOT(updateBoard(const std::vector<std::vector<int>>&)));
     m_pAiThread->start();
 
     for(int x = 0; x < Settings::BoardCountX; x++)
     {
-        m_board.push_back(QVector<Tile*>());
+        m_board.push_back(std::vector<Tile*>());
         for(int y = 0; y < Settings::BoardCountY; y++)
         {
             m_board[x].push_back(new Tile(this, Settings::BoardRect.left() + x * Settings::TileSize, Settings::BoardRect.top() + y * Settings::TileSize, Settings::TileSize, Settings::TileSize));
@@ -95,7 +95,7 @@ void DLG_Home::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void randomlyFillSubGrid(QVector<QVector<int>>& board, const int& startX, const int& startY)
+void randomlyFillSubGrid(std::vector<std::vector<int>>& board, const int& startX, const int& startY)
 {
     int x = startX;
     int y = startY;
@@ -120,7 +120,7 @@ void randomlyFillSubGrid(QVector<QVector<int>>& board, const int& startX, const 
     }
 }
 
-bool validPosition(QVector<QVector<int>>& board, const int& xCheck, const int& yCheck, const int& numToCheck)
+bool validPosition(std::vector<std::vector<int>>& board, const int& xCheck, const int& yCheck, const int& numToCheck)
 {
     //Check row
     for(int col = 0; col < board.size(); col++)
@@ -157,7 +157,7 @@ bool validPosition(QVector<QVector<int>>& board, const int& xCheck, const int& y
     return true;
 }
 
-bool findNextEmptySpot(const QVector<QVector<int>>& board, int& x, int& y)
+bool findNextEmptySpot(const std::vector<std::vector<int>>& board, int& x, int& y)
 {
     while(board[x][y] != 0)
     {
@@ -180,7 +180,7 @@ bool findNextEmptySpot(const QVector<QVector<int>>& board, int& x, int& y)
     return true;
 }
 
-bool fillBoardPossible(QVector<QVector<int>>& board, const int& x, const int& y)
+bool fillBoardPossible(std::vector<std::vector<int>>& board, const int& x, const int& y)
 {
     for(int newNum : Settings::SubGridOptions)
     {
@@ -216,7 +216,7 @@ void DLG_Home::generateBoard()
     // - Remove all but except Settings::NumberOfCellsToKeepAfterGen in random locations
     // - Set m_board to remaning values
 
-    QVector<QVector<int>> boardToFill = QVector<QVector<int>>(m_board.size(), QVector<int>(m_board[0].size(), 0));
+    std::vector<std::vector<int>> boardToFill = std::vector<std::vector<int>>(m_board.size(), std::vector<int>(m_board[0].size(), 0));
 
     //Diagonally fill centeral subgrids
     randomlyFillSubGrid(boardToFill, 0, 0);
@@ -283,7 +283,7 @@ void DLG_Home::on_btn_ai_clicked()
     {
         #ifdef AI_DEBUG
 
-            QVector<QVector<int>> board = {{0,0,0, 0,0,0, 0,8,0},
+            std::vector<std::vector<int>> board = {{0,0,0, 0,0,0, 0,8,0},
                                            {4,0,0, 0,0,0, 0,0,7},
                                            {0,8,0, 7,0,0, 0,0,0},
 
@@ -306,7 +306,7 @@ void DLG_Home::on_btn_ai_clicked()
 
         #else
 
-            QVector<QVector<int>> board = QVector<QVector<int>>(m_board.size(), QVector<int>(m_board[0].size(), 0));
+            std::vector<std::vector<int>> board = std::vector<std::vector<int>>(m_board.size(), std::vector<int>(m_board[0].size(), 0));
             for(int x = 0; x < m_board.size(); x++)
             {
                 for(int y = 0; y < m_board[x].size(); y++)
@@ -326,7 +326,7 @@ void DLG_Home::updateCell(const int &x, const int &y, const int &value)
     m_board[x][y]->setValue(value);
 }
 
-void DLG_Home::updateBoard(const QVector<QVector<int>>& board)
+void DLG_Home::updateBoard(const std::vector<std::vector<int>>& board)
 {
     for(int x = 0; x < board.size(); x++)
     {
@@ -347,7 +347,7 @@ AiThread::AiThread() : QThread(),
 {
 }
 
-void AiThread::setBoard(const QVector<QVector<int>>& board)
+void AiThread::setBoard(const std::vector<std::vector<int>>& board)
 {
     if(!m_bWorking)
     {
@@ -412,7 +412,7 @@ void AiThread::run()
     }
 }
 
-bool AiThread::findSolution(QVector<QVector<int>>& board, const int x, const int y)
+bool AiThread::findSolution(std::vector<std::vector<int>>& board, const int x, const int y)
 {
     //Try all possible options
     for(int newNum : Settings::SubGridOptions)
