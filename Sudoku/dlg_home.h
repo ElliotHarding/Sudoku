@@ -74,11 +74,16 @@ signals:
     void updateBoard(const QVector<QVector<int>>& board);
 
 private:
-    bool findSolution(QVector<QVector<int>>& board, const int& x, const int& y);
+    bool findSolution(QVector<QVector<int>>& board, const int x, const int y);
 
-    QVector<QVector<int>> m_board;
+    ///Atomic flags
     std::atomic<bool> m_bStop;
     std::atomic<bool> m_bWorking;
+
+    ///Memory
+    QVector<QVector<int>> m_board;
+    int m_nextX;
+    int m_nextY;
 };
 
 #endif // DLG_HOME_H

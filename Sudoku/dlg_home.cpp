@@ -412,7 +412,7 @@ void AiThread::run()
     }
 }
 
-bool AiThread::findSolution(QVector<QVector<int>>& board, const int &x, const int &y)
+bool AiThread::findSolution(QVector<QVector<int>>& board, const int x, const int y)
 {
     //Try all possible options
     for(int newNum : Settings::SubGridOptions)
@@ -426,15 +426,15 @@ bool AiThread::findSolution(QVector<QVector<int>>& board, const int &x, const in
             #endif
 
             //Find next free board pos
-            int nextX = x;
-            int nextY = y;
-            if(!findNextEmptySpot(board, nextX, nextY))
+            m_nextX = x;
+            m_nextY = y;
+            if(!findNextEmptySpot(board, m_nextX, m_nextY))
             {
                 return true;
             }
 
             //Try fill in rest of board with newNum in board pos x,y
-            if(findSolution(board, nextX, nextY))
+            if(findSolution(board, m_nextX, m_nextY))
             {
                 return true;
             }

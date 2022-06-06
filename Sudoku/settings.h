@@ -28,7 +28,7 @@ const int NumberOfCellsToKeepAfterGen = 20;
 
 }
 
-//#define AI_DEBUG
+#define AI_DEBUG
 
 #define AI_SHOW_PROGRESS
 
