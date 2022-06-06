@@ -61,7 +61,7 @@ DLG_Home::~DLG_Home()
     delete ui;
 }
 
-void DLG_Home::setSelectedTile(Tile* pTile)
+void DLG_Home::setSelectedTile(BaseTile* pTile)
 {
     if(m_pSelectedTile)
     {
@@ -302,7 +302,10 @@ void DLG_Home::on_btn_ai_clicked()
             {
                 for(uint y = 0; y < m_board[x].size(); y++)
                 {
-                    board[x][y] = m_board[x][y]->value();
+                    if(m_board[x][y]->isPermanent())
+                    {
+                        board[x][y] = m_board[x][y]->value();
+                    }
                 }
             }
 

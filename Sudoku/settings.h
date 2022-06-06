@@ -9,11 +9,16 @@ namespace Settings
 ///Tile size
 const uint TileSize = 50;
 
+///Tile color
+const QColor PotentialTileColor = Qt::gray;
+
 ///Tile text
 const QColor TileTextColorPermanent = Qt::black;
 const QColor TileTextColorEditable = Qt::blue;
-const QFont TileTextFont = QFont("Helvetica [Cronyx]", 10, QFont::Normal);
+const QFont TileTextFont = QFont("Helvetica [Cronyx]", 15, QFont::Normal);
+const QFont PotentialTileTextFont = QFont("Helvetica [Cronyx]", 6, QFont::Normal);
 const QFontMetrics TileTextFontMetrics(TileTextFont);
+const QFontMetrics PotentialTileTextFontMetrics(PotentialTileTextFont);
 
 ///Board
 const uint BoardCountX = 9;
