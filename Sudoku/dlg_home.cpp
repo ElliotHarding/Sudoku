@@ -157,7 +157,7 @@ bool validPosition(QVector<QVector<int>>& board, const int& xCheck, const int& y
     return true;
 }
 
-bool findFirstEmptySpot(const QVector<QVector<int>>& board, int& x, int& y)
+bool findNextEmptySpot(const QVector<QVector<int>>& board, int& x, int& y)
 {
     while(board[x][y] != 0)
     {
@@ -192,7 +192,7 @@ bool fillBoardPossible(QVector<QVector<int>>& board, const int& x, const int& y)
             //Find next free board pos
             int nextX = x;
             int nextY = y;
-            if(!findFirstEmptySpot(board, nextX, nextY))
+            if(!findNextEmptySpot(board, nextX, nextY))
             {
                 return true;
             }
@@ -383,7 +383,7 @@ void AiThread::run()
 
             int x = 0;
             int y = 0;
-            if(findFirstEmptySpot(m_board, x, y))
+            if(findNextEmptySpot(m_board, x, y))
             {
                 if(findSolution(m_board, x, y))
                 {
@@ -428,7 +428,7 @@ bool AiThread::findSolution(QVector<QVector<int>>& board, const int &x, const in
             //Find next free board pos
             int nextX = x;
             int nextY = y;
-            if(!findFirstEmptySpot(board, nextX, nextY))
+            if(!findNextEmptySpot(board, nextX, nextY))
             {
                 return true;
             }
