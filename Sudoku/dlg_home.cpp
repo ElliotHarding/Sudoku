@@ -292,66 +292,50 @@ void DLG_Home::updateCell(const int &x, const int &y, const int &value)
 
 AiThread::AiThread() : QThread(),
     m_bStop(false),
-    m_bWorkOnBoard(false),
-    m_bWoring(false)
+    m_bWorking(false)
 {
 }
 
 void AiThread::setBoard(const QVector<QVector<int>>& board)
 {
-    m_mutex.lock();
-    m_board = board;
-    m_bWorkOnBoard = true;
-    m_mutex.unlock();
+    if(!m_bWorking)
+    {
+        m_board = board;
+        m_bWorking = true;
+    }
 }
 
 void AiThread::setStop()
 {
-    m_mutex.lock();
     m_bStop = true;
-    m_mutex.unlock();
 }
 
 bool AiThread::isSetStop()
 {
-    m_mutex.lock();
-    const bool isStop = m_bStop;
-    m_mutex.unlock();
-    return isStop;
+    return m_bStop;
 }
 
 bool AiThread::isWorking()
 {
-    m_mutex.lock();
-    const bool working = m_bWoring;
-    m_mutex.unlock();
-    return working;
+    return m_bWorking;
 }
 
 void AiThread::run()
 {
     while(true)
     {
-        m_mutex.lock();
-
-
         if(m_bStop)
         {
-            m_mutex.unlock();
             return;
         }
 
-        if(m_bWorkOnBoard)
+        if(m_bWorking)
         {
 #ifdef AI_DEBUG
     clock_t start = clock();
 #endif
-            m_bWorkOnBoard = false;
-            m_bWoring = true;
 
             QVector<QVector<int>> board = m_board;
-
-            m_mutex.unlock();
 
             int x = 0;
             int y = 0;
@@ -376,11 +360,8 @@ void AiThread::run()
     qDebug() << "AiThread::run: Think time: " << end - start;
 #endif
 
-            m_mutex.lock();
-            m_bWoring = false;
+            m_bWorking = false;
         }
-
-        m_mutex.unlock();
     }
 }
 

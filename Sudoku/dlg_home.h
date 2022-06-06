@@ -3,6 +3,8 @@
 
 #include "tile.h"
 
+#include <atomic>
+
 #include <QMainWindow>
 #include <QMutex>
 #include <QThread>
@@ -65,11 +67,9 @@ signals:
 private:
     bool findSolution(QVector<QVector<int>>& board, const int& x, const int& y);
 
-    QMutex m_mutex;
     QVector<QVector<int>> m_board;
-    bool m_bStop;
-    bool m_bWorkOnBoard;
-    bool m_bWoring;
+    std::atomic<bool> m_bStop;
+    std::atomic<bool> m_bWorking;
 };
 
 #endif // DLG_HOME_H
