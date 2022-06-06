@@ -56,7 +56,6 @@ public:
 
     void setBoard(const QVector<QVector<int>>& board);
     void setStop();
-    bool isSetStop();
     bool isWorking();
 
     void run();

@@ -8,6 +8,10 @@
 #include <QMouseEvent>
 #include <QRandomGenerator>
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// DLG_Home::DLG_Home
+///
+/// Main window that displays the game
 DLG_Home::DLG_Home(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::DLG_Home)
@@ -43,7 +47,7 @@ DLG_Home::~DLG_Home()
 
     //Stop ai thread
     m_pAiThread->setStop();
-    while(!m_pAiThread->isSetStop())
+    while(m_pAiThread->isWorking())
     {
         QThread::sleep(1);
     }
@@ -290,6 +294,10 @@ void DLG_Home::updateCell(const int &x, const int &y, const int &value)
     m_board[x][y]->setValue(value);
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// AiThread::AiThread
+///
+///
 AiThread::AiThread() : QThread(),
     m_bStop(false),
     m_bWorking(false)
@@ -308,11 +316,6 @@ void AiThread::setBoard(const QVector<QVector<int>>& board)
 void AiThread::setStop()
 {
     m_bStop = true;
-}
-
-bool AiThread::isSetStop()
-{
-    return m_bStop;
 }
 
 bool AiThread::isWorking()
@@ -367,6 +370,7 @@ void AiThread::run()
 
 bool AiThread::findSolution(QVector<QVector<int>>& board, const int &x, const int &y)
 {
+    //Try all possible options
     for(int newNum : Settings::SubGridOptions)
     {
         if(validPosition(board, x, y, newNum))
