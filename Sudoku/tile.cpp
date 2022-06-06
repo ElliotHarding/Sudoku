@@ -1,12 +1,16 @@
 #include "tile.h"
 #include "settings.h"
+#include "dlg_home.h"
 
 #include <QPainter>
+#include <QDebug>
+#include <QMouseEvent>
 
-Tile::Tile(QWidget* parent, const uint& x, const uint& y, const uint& w, const uint& h) : QWidget(parent),
+Tile::Tile(DLG_Home* parent, const uint& x, const uint& y, const uint& w, const uint& h) : QWidget(parent),
     m_value(0),
     m_bPermanent(false),
-    m_bSelected(false)
+    m_bSelected(false),
+    m_pHome(parent)
 {
     setGeometry(x, y, w, h);
 }
@@ -42,6 +46,13 @@ void Tile::setSelected(bool selected)
 void Tile::reset()
 {
     m_value = 0;
+    update();
+}
+
+void Tile::mousePressEvent(QMouseEvent* mouseEvent)
+{
+    m_bSelected = true;
+    m_pHome->setSelectedTile(this);
     update();
 }
 

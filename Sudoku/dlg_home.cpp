@@ -61,23 +61,14 @@ DLG_Home::~DLG_Home()
     delete ui;
 }
 
-void DLG_Home::mousePressEvent(QMouseEvent *mouseEvent)
+void DLG_Home::setSelectedTile(Tile* pTile)
 {
     if(m_pSelectedTile)
     {
         m_pSelectedTile->setSelected(false);
     }
 
-    if(Settings::BoardRect.contains(mouseEvent->pos()))
-    {
-        const uint xOffset = mouseEvent->pos().x() - Settings::BoardRect.x();
-        const uint yOffset = mouseEvent->pos().y() - Settings::BoardRect.y();
-        const uint x = floor(xOffset/Settings::TileSize);
-        const uint y = floor(yOffset/Settings::TileSize);
-
-        m_pSelectedTile = m_board[x][y];
-        m_pSelectedTile->setSelected(true);
-    }
+    m_pSelectedTile = pTile;
 }
 
 void DLG_Home::keyPressEvent(QKeyEvent *event)

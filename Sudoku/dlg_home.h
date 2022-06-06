@@ -27,9 +27,10 @@ public:
     DLG_Home(QWidget *parent = nullptr);
     ~DLG_Home();
 
+    void setSelectedTile(Tile* pTile);
+
 protected:
     ///User input events
-    void mousePressEvent(QMouseEvent* mouseEvent) override;
     void keyPressEvent(QKeyEvent *event) override;
 
 private slots:
