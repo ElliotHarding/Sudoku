@@ -56,7 +56,7 @@ void Tile::paintEvent(QPaintEvent*)
         {
             //Prep value text drawing
             pauinter.setFont(Settings::TileTextFont);
-            const float textWidth = Settings::TileTextFontMetrics.horizontalAdvance(m_value);
+            const float textWidth = Settings::TileTextFontMetrics.horizontalAdvance(QString::number(m_value));
 
             //Draw value text
             pauinter.drawText(QPointF(Settings::TileSize/2 - textWidth/2, Settings::TileSize/2 + Settings::TileTextFontMetrics.height()/4), QString::number(m_value));
