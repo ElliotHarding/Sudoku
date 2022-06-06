@@ -5,6 +5,7 @@
 
 #include <QMainWindow>
 #include <QMutex>
+#include <QThread>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class DLG_Home; }
@@ -45,7 +46,6 @@ private:
     void generateBoard();
 };
 
-#include <QThread>
 class AiThread : public QThread
 {
         Q_OBJECT
