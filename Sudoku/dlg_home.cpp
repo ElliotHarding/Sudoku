@@ -33,6 +33,10 @@ DLG_Home::DLG_Home(QWidget *parent)
     }
 
     generateBoard();
+
+#ifdef AI_DEBUG
+    on_btn_ai_clicked();
+#endif
 }
 
 DLG_Home::~DLG_Home()
@@ -96,7 +100,13 @@ void randomlyFillSubGrid(QVector<QVector<int>>& board, const int& startX, const 
     int x = startX;
     int y = startY;
 
+#ifdef AI_DEBUG
+    static int seed = 1;
+    std::mt19937 eng(seed++);
+#else
     std::mt19937 eng(clock());
+#endif
+
     std::vector<int> randomSubGrid = Settings::SubGridOptions;
     std::shuffle(randomSubGrid.begin(), randomSubGrid.end(), eng);
 
