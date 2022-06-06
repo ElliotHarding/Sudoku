@@ -87,7 +87,7 @@ void DLG_Home::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void randomlyFillSubGrid(QVector<QVector<Tile*>>& board, const int& startX, const int& startY)
+void randomlyFillSubGrid(QVector<QVector<int>>& board, const int& startX, const int& startY)
 {
     int x = startX;
     int y = startY;
@@ -98,7 +98,7 @@ void randomlyFillSubGrid(QVector<QVector<Tile*>>& board, const int& startX, cons
 
     for(size_t i = 0; i < randomSubGrid.size(); i++)
     {
-        board[x][y]->setValue(randomSubGrid[i]);
+        board[x][y] = randomSubGrid[i];
 
         if((i+1) % Settings::SubGridCountX == 0)
         {
@@ -110,43 +110,6 @@ void randomlyFillSubGrid(QVector<QVector<Tile*>>& board, const int& startX, cons
             x++;
         }
     }
-}
-
-bool validPosition(QVector<QVector<Tile*>>& board, const int& xCheck, const int& yCheck, const int& numToCheck)
-{
-    //Check row
-    for(int col = 0; col < board.size(); col++)
-    {
-        if(board[col][yCheck]->value() == numToCheck)
-        {
-            return false;
-        }
-    }
-
-    //Check col
-    for(int row = 0; row < board[0].size(); row++)
-    {
-        if(board[xCheck][row]->value() == numToCheck)
-        {
-            return false;
-        }
-    }
-
-    //Check sub grid
-    const int subStartX = xCheck - (xCheck % 3);
-    const int subStartY = yCheck - (yCheck % 3);
-    for(int x = subStartX; x < subStartX + 3; x++)
-    {
-        for(int y = subStartY; y < subStartY + 3; y++)
-        {
-            if(board[x][y]->value() == numToCheck)
-            {
-                return false;
-            }
-        }
-    }
-
-    return true;
 }
 
 bool validPosition(QVector<QVector<int>>& board, const int& xCheck, const int& yCheck, const int& numToCheck)
@@ -186,35 +149,44 @@ bool validPosition(QVector<QVector<int>>& board, const int& xCheck, const int& y
     return true;
 }
 
-bool fillBoardPossible(QVector<QVector<Tile*>>& board, const int& x, const int& y)
+bool findFirstEmptySpot(const QVector<QVector<int>>& board, int& x, int& y)
+{
+    while(board[x][y] != 0)
+    {
+        if(x > board.size()-2)
+        {
+            x = 0;
+            y++;
+
+            if(y == board[0].size())
+            {
+                return false;
+            }
+        }
+        else
+        {
+            x++;
+        }
+    }
+
+    return true;
+}
+
+bool fillBoardPossible(QVector<QVector<int>>& board, const int& x, const int& y)
 {
     for(int newNum : Settings::SubGridOptions)
     {
         if(validPosition(board, x, y, newNum))
         {
             //Set board[x][y] to testing newNum
-            board[x][y]->setValue(newNum);
+            board[x][y] = newNum;
 
             //Find next free board pos
             int nextX = x;
             int nextY = y;
-            while(board[nextX][nextY]->value() != 0)
+            if(!findFirstEmptySpot(board, nextX, nextY))
             {
-                if(nextX > board.size()-2)
-                {
-                    nextX = 0;
-                    nextY++;
-
-                    //If reached the end of the board
-                    if(nextY == board[0].size())
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    nextX++;
-                }
+                return true;
             }
 
             //Try fill in rest of board with newNum in board pos x,y
@@ -223,7 +195,7 @@ bool fillBoardPossible(QVector<QVector<Tile*>>& board, const int& x, const int& 
                 return true;
             }
 
-            board[x][y]->setValue(0);
+            board[x][y] = 0;
         }
     }
 
@@ -232,22 +204,19 @@ bool fillBoardPossible(QVector<QVector<Tile*>>& board, const int& x, const int& 
 
 void DLG_Home::generateBoard()
 {
-    //Reset board
-    for(int x = 0; x < m_board.size(); x++)
-    {
-        for(int y = 0; y < m_board[x].size(); y++)
-        {
-            m_board[x][y]->setValue(0);
-        }
-    }
+    // - Fill a complete board
+    // - Remove all but except Settings::NumberOfCellsToKeepAfterGen in random locations
+    // - Set m_board to remaning values
+
+    QVector<QVector<int>> boardToFill = QVector<QVector<int>>(m_board.size(), QVector<int>(m_board[0].size(), 0));
 
     //Diagonally fill centeral subgrids
-    randomlyFillSubGrid(m_board, 0, 0);
-    randomlyFillSubGrid(m_board, 3, 3);
-    randomlyFillSubGrid(m_board, 6, 6);
+    randomlyFillSubGrid(boardToFill, 0, 0);
+    randomlyFillSubGrid(boardToFill, 3, 3);
+    randomlyFillSubGrid(boardToFill, 6, 6);
 
     //Try fill rest of board
-    if(fillBoardPossible(m_board, 3, 0))
+    if(fillBoardPossible(boardToFill, 3, 0))
     {
         qDebug() << "DLG_Home::generateBoard - Filled successfully";
     }
@@ -285,6 +254,7 @@ void DLG_Home::generateBoard()
             else
             {
                 keptCells.removeOne(boardLocation);
+                m_board[x][y]->setValue(boardToFill[x][y]);
                 m_board[x][y]->setPermanent(true);
             }
         }
@@ -356,29 +326,6 @@ bool AiThread::isWorking()
     const bool working = m_bWoring;
     m_mutex.unlock();
     return working;
-}
-
-bool findFirstEmptySpot(const QVector<QVector<int>>& board, int& x, int& y)
-{
-    while(board[x][y] != 0)
-    {
-        if(x > board.size()-2)
-        {
-            x = 0;
-            y++;
-
-            if(y == board[0].size())
-            {
-                return false;
-            }
-        }
-        else
-        {
-            x++;
-        }
-    }
-
-    return true;
 }
 
 void AiThread::run()
