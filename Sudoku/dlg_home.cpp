@@ -381,11 +381,11 @@ void AiThread::run()
     clock_t start = clock();
 #endif
 
-            uint x = 0;
-            uint y = 0;
-            if(findNextEmptySpot(m_board, x, y))
+            m_nextX = 0;
+            m_nextY = 0;
+            if(findNextEmptySpot(m_board, m_nextX, m_nextY))
             {
-                if(findSolution(m_board, x, y))
+                if(findSolution(m_board, m_nextX, m_nextY))
                 {
                     #ifndef AI_SHOW_PROGRESS
                         emit updateBoard(m_board);
