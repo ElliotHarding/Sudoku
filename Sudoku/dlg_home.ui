@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: black;</string>
+     <string notr="true">background-color: grey;</string>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -40,7 +40,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: black;</string>
+     <string notr="true">background-color: grey;</string>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -52,7 +52,7 @@
       <x>0</x>
       <y>149</y>
       <width>450</width>
-      <height>3</height>
+      <height>1</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -72,7 +72,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: black;</string>
+     <string notr="true">background-color: grey;</string>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -88,7 +88,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: black;</string>
+     <string notr="true">background-color: grey;</string>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -100,7 +100,7 @@
       <x>0</x>
       <y>299</y>
       <width>450</width>
-      <height>3</height>
+      <height>1</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -120,7 +120,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: black;</string>
+     <string notr="true">background-color: grey;</string>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -136,7 +136,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: black;</string>
+     <string notr="true">background-color: grey;</string>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -152,7 +152,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: black;</string>
+     <string notr="true">background-color: grey;</string>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -168,7 +168,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: black;</string>
+     <string notr="true">background-color: grey;</string>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -184,7 +184,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color:black;</string>
+     <string notr="true">background-color: grey;</string>
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
@@ -200,7 +200,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color:black;</string>
+     <string notr="true">background-color: grey;</string>
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
@@ -216,7 +216,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color:black;</string>
+     <string notr="true">background-color: grey;</string>
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
@@ -227,12 +227,12 @@
      <rect>
       <x>149</x>
       <y>0</y>
-      <width>3</width>
+      <width>1</width>
       <height>450</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color:black;</string>
+     <string notr="true">background-color: black;</string>
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
@@ -248,7 +248,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color:black;</string>
+     <string notr="true">background-color: grey;</string>
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
@@ -264,7 +264,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color:black;</string>
+     <string notr="true">background-color: grey;</string>
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
@@ -275,12 +275,12 @@
      <rect>
       <x>299</x>
       <y>0</y>
-      <width>3</width>
+      <width>1</width>
       <height>450</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color:black;</string>
+     <string notr="true">background-color: black;</string>
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
@@ -296,7 +296,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color:black;</string>
+     <string notr="true">background-color: grey;</string>
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
@@ -312,7 +312,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color:black;</string>
+     <string notr="true">background-color: grey;</string>
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
@@ -328,7 +328,7 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color:black;</string>
+     <string notr="true">background-color: grey;</string>
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
