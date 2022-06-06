@@ -39,6 +39,7 @@ private slots:
 
     ///Ai
     void updateCell(const int& x, const int& y, const int& value);
+    void updateBoard(const QVector<QVector<int>>& board);
 
 private:
     Ui::DLG_Home *ui;
@@ -70,6 +71,7 @@ public:
 
 signals:
     void updateCell(const int& x, const int& y, const int& value);
+    void updateBoard(const QVector<QVector<int>>& board);
 
 private:
     bool findSolution(QVector<QVector<int>>& board, const int& x, const int& y);

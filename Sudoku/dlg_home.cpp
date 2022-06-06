@@ -21,6 +21,8 @@ DLG_Home::DLG_Home(QWidget *parent)
 
     m_pAiThread = new AiThread();
     connect(m_pAiThread, SIGNAL(updateCell(const int&, const int&, const int&)), this, SLOT(updateCell(const int&, const int&, const int&)));
+    qRegisterMetaType<QVector<QVector<int>>>("QVector<QVector<int>>");
+    connect(m_pAiThread, SIGNAL(updateBoard(const QVector<QVector<int>>&)), this, SLOT(updateBoard(const QVector<QVector<int>>&)));
     m_pAiThread->start();
 
     for(int x = 0; x < Settings::BoardCountX; x++)
@@ -308,6 +310,17 @@ void DLG_Home::updateCell(const int &x, const int &y, const int &value)
     m_board[x][y]->setValue(value);
 }
 
+void DLG_Home::updateBoard(const QVector<QVector<int>>& board)
+{
+    for(int x = 0; x < board.size(); x++)
+    {
+        for(int y = 0; y < board[x].size(); y++)
+        {
+            m_board[x][y]->setValue(board[x][y]);
+        }
+    }
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// AiThread::AiThread
 ///
@@ -358,6 +371,9 @@ void AiThread::run()
             {
                 if(findSolution(m_board, x, y))
                 {
+                    #ifndef AI_SHOW_PROGRESS
+                        emit updateBoard(m_board);
+                    #endif
                     qDebug() << "AiThread::run - Ai found solution";
                 }
                 else
@@ -389,7 +405,9 @@ bool AiThread::findSolution(QVector<QVector<int>>& board, const int &x, const in
         {
             //Set board[x][y] to testing newNum
             board[x][y] = newNum;
-            emit updateCell(x, y, newNum);
+            #ifdef AI_SHOW_PROGRESS
+                emit updateCell(x, y, newNum);
+            #endif
 
             //Find next free board pos
             int nextX = x;
@@ -406,7 +424,9 @@ bool AiThread::findSolution(QVector<QVector<int>>& board, const int &x, const in
             }
 
             board[x][y] = 0;
-            emit updateCell(x, y, 0);
+            #ifdef AI_SHOW_PROGRESS
+                emit updateCell(x, y, 0);
+            #endif
         }
     }
 
