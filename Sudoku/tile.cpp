@@ -10,7 +10,7 @@
 /// Tile::Tile
 ///
 Tile::Tile(DLG_Home* parent, const uint& x, const uint& y, const uint& w, const uint& h) : BaseTile(parent, parent, x, y, w, h),
-    m_pPotentialTile(new PotentialTile(parent, this, 38, 2, 10, 10))
+    m_pPotentialTile(new PotentialTile(parent, this, Settings::TileSize - Settings::PotentialTileSize - Settings::PotentialTilePadding, Settings::PotentialTilePadding, Settings::PotentialTileSize, Settings::PotentialTileSize))
 {
 }
 
@@ -120,7 +120,7 @@ void PotentialTile::paintEvent(QPaintEvent*)
             const float textWidth = Settings::PotentialTileTextFontMetrics.horizontalAdvance(QString::number(m_value));
 
             //Draw value text
-            painter.drawText(QPointF(geometry().width()/2 - textWidth/2, geometry().height()/2 + Settings::PotentialTileTextFontMetrics.height()/4), QString::number(m_value));
+            painter.drawText(QPointF(geometry().width()/2 - textWidth/2, geometry().height()/2 + Settings::PotentialTileTextFontMetrics.height()/3), QString::number(m_value));
         }
 
         if(m_bSelected)
