@@ -61,7 +61,7 @@ DLG_Home::~DLG_Home()
     delete ui;
 }
 
-void DLG_Home::setSelectedTile(Tile* pTile)
+void DLG_Home::setSelectedTile(BaseTile* pTile)
 {
     if(m_pSelectedTile)
     {
@@ -247,7 +247,7 @@ void DLG_Home::generateBoard()
             const QPoint boardLocation = QPoint(x,y);
             if(!keptCells.contains(boardLocation))
             {
-                m_board[x][y]->setValue(0);
+                m_board[x][y]->reset();
                 m_board[x][y]->setPermanent(false);
             }
             else
@@ -255,7 +255,8 @@ void DLG_Home::generateBoard()
                 keptCells.removeOne(boardLocation);
                 m_board[x][y]->setValue(boardToFill[x][y]);
                 m_board[x][y]->setPermanent(true);
-            }
+                m_board[x][y]->resetPotentialTile();
+            }         
         }
     }
 }
@@ -306,6 +307,7 @@ void DLG_Home::on_btn_ai_clicked()
                     {
                         board[x][y] = m_board[x][y]->value();
                     }
+                    m_board[x][y]->resetPotentialTile();
                 }
             }
 

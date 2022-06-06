@@ -27,7 +27,7 @@ public:
     DLG_Home(QWidget *parent = nullptr);
     ~DLG_Home();
 
-    void setSelectedTile(Tile* pTile);
+    void setSelectedTile(BaseTile* pTile);
 
 protected:
     ///User input events
@@ -46,7 +46,7 @@ private:
     Ui::DLG_Home *ui;
 
     std::vector<std::vector<Tile*>> m_board;
-    Tile* m_pSelectedTile;
+    BaseTile* m_pSelectedTile;
 
     ///AI
     AiThread* m_pAiThread;

@@ -4,12 +4,13 @@
 #include <QWidget>
 
 class DLG_Home;
+class Tile;
 
-class Tile : QWidget
+class BaseTile : public QWidget
 {
     Q_OBJECT
 public:
-    Tile(DLG_Home* parent, const uint& x, const uint& y, const uint& w, const uint& h);
+    BaseTile(DLG_Home* pHome, QWidget* pParent, const uint& x, const uint& y, const uint& w, const uint& h);
 
     void setValue(uint value);
     uint value();
@@ -23,14 +24,39 @@ public:
 
 protected:
     void mousePressEvent(QMouseEvent* mouseEvent) override;
+
+    uint m_value;
+    bool m_bSelected;
+    bool m_bPermanent;
+
+private:
+    DLG_Home* m_pHome;
+};
+
+class PotentialTile : public BaseTile
+{
+    Q_OBJECT
+public:
+    PotentialTile(DLG_Home* pHome, Tile* pParent, const uint& x, const uint& y, const uint& w, const uint& h);
+
+protected:
+    void paintEvent(QPaintEvent* paintEvent) override;
+};
+
+class Tile : public BaseTile
+{
+    Q_OBJECT
+public:
+    Tile(DLG_Home* parent, const uint& x, const uint& y, const uint& w, const uint& h);
+
+    void reset();
+    void resetPotentialTile();
+
+protected:
     void paintEvent(QPaintEvent* paintEvent) override;
 
 private:
-    uint m_value;
-    bool m_bPermanent;
-    bool m_bSelected;
-
-    DLG_Home* m_pHome;
+    PotentialTile* m_pPotentialTile;
 };
 
 #endif // TILE_H

@@ -6,76 +6,131 @@
 #include <QDebug>
 #include <QMouseEvent>
 
-Tile::Tile(DLG_Home* parent, const uint& x, const uint& y, const uint& w, const uint& h) : QWidget(parent),
-    m_value(0),
-    m_bPermanent(false),
-    m_bSelected(false),
-    m_pHome(parent)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Tile::Tile
+///
+Tile::Tile(DLG_Home* parent, const uint& x, const uint& y, const uint& w, const uint& h) : BaseTile(parent, parent, x, y, w, h),
+    m_pPotentialTile(new PotentialTile(parent, this, Settings::TileSize - Settings::PotentialTileSize - Settings::PotentialTilePadding, Settings::PotentialTilePadding, Settings::PotentialTileSize, Settings::PotentialTileSize))
 {
-    setGeometry(x, y, w, h);
-}
-
-void Tile::setValue(uint value)
-{
-    m_value = value;
-    update();
-}
-
-uint Tile::value()
-{
-    return m_value;
-}
-
-void Tile::setPermanent(bool permanent)
-{
-    m_bPermanent = permanent;
-    update();
-}
-
-bool Tile::isPermanent()
-{
-    return m_bPermanent;
-}
-
-void Tile::setSelected(bool selected)
-{
-    m_bSelected = selected;
-    update();
 }
 
 void Tile::reset()
 {
     m_value = 0;
+    m_pPotentialTile->reset();
     update();
 }
 
-void Tile::mousePressEvent(QMouseEvent*)
+void Tile::resetPotentialTile()
 {
-    m_bSelected = true;
-    m_pHome->setSelectedTile(this);
-    update();
+    m_pPotentialTile->reset();
 }
 
 void Tile::paintEvent(QPaintEvent*)
 {
     if(m_value != 0 || m_bSelected)
     {
-        QPainter pauinter(this);
-        pauinter.setPen(m_bPermanent ? Settings::TileTextColorPermanent : Settings::TileTextColorEditable);
+        QPainter painter(this);
+        painter.setPen(m_bPermanent ? Settings::TileTextColorPermanent : Settings::TileTextColorEditable);
 
         if(m_value != 0)
         {
             //Prep value text drawing
-            pauinter.setFont(Settings::TileTextFont);
+            painter.setFont(Settings::TileTextFont);
             const float textWidth = Settings::TileTextFontMetrics.horizontalAdvance(QString::number(m_value));
 
             //Draw value text
-            pauinter.drawText(QPointF(Settings::TileSize/2 - textWidth/2, Settings::TileSize/2 + Settings::TileTextFontMetrics.height()/4), QString::number(m_value));
+            painter.drawText(QPointF(geometry().width()/2 - textWidth/2, geometry().height()/2 + Settings::TileTextFontMetrics.height()/4), QString::number(m_value));
         }
 
         if(m_bSelected)
         {
-            pauinter.drawRect(QRect(1, 1, Settings::TileSize-2, Settings::TileSize-2));
+            painter.drawRect(QRect(1, 1, geometry().width()-2, geometry().height()-2));
+        }
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// BaseTile::BaseTile
+///
+BaseTile::BaseTile(DLG_Home* pHome, QWidget* pParent, const uint &x, const uint &y, const uint &w, const uint &h) : QWidget(pParent),
+    m_value(0),
+    m_bSelected(false),
+    m_bPermanent(false),
+    m_pHome(pHome)
+{
+    setGeometry(x, y, w, h);
+}
+
+void BaseTile::setValue(uint value)
+{
+    m_value = value;
+    update();
+}
+
+uint BaseTile::value()
+{
+    return m_value;
+}
+
+void BaseTile::setPermanent(bool permanent)
+{
+    m_bPermanent = permanent;
+    update();
+}
+
+bool BaseTile::isPermanent()
+{
+    return m_bPermanent;
+}
+
+void BaseTile::setSelected(bool selected)
+{
+    m_bSelected = selected;
+    update();
+}
+
+void BaseTile::reset()
+{
+    m_value = 0;
+    update();
+}
+
+void BaseTile::mousePressEvent(QMouseEvent*)
+{
+    m_bSelected = true;
+    m_pHome->setSelectedTile(this);
+    update();
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// PotentialTile::PotentialTile
+///
+PotentialTile::PotentialTile(DLG_Home *pHome, Tile *pParent, const uint &x, const uint &y, const uint &w, const uint &h) : BaseTile(pHome, pParent, x, y, w, h)
+{
+}
+
+void PotentialTile::paintEvent(QPaintEvent*)
+{
+    QPainter painter(this);
+    painter.fillRect(QRect(1, 1, geometry().width()-2, geometry().height()-2), Settings::PotentialTileColor);
+
+    if(m_value != 0 || m_bSelected)
+    {
+        painter.setPen(Settings::TileTextColorEditable);
+        if(m_value != 0)
+        {
+            //Prep value text drawing
+            painter.setFont(Settings::PotentialTileTextFont);
+            const float textWidth = Settings::PotentialTileTextFontMetrics.horizontalAdvance(QString::number(m_value));
+
+            //Draw value text
+            painter.drawText(QPointF(geometry().width()/2 - textWidth/2, geometry().height()/2 + Settings::PotentialTileTextFontMetrics.height()/3), QString::number(m_value));
+        }
+
+        if(m_bSelected)
+        {
+            painter.drawRect(QRect(1, 1, geometry().width()-2, geometry().height()-2));
         }
     }
 }
