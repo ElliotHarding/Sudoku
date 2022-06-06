@@ -50,7 +50,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>149</y>
+      <y>150</y>
       <width>450</width>
       <height>1</height>
      </rect>
@@ -98,7 +98,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>299</y>
+      <y>300</y>
       <width>450</width>
       <height>1</height>
      </rect>
@@ -225,7 +225,7 @@
    <widget class="Line" name="line_14">
     <property name="geometry">
      <rect>
-      <x>149</x>
+      <x>150</x>
       <y>0</y>
       <width>1</width>
       <height>450</height>
@@ -273,7 +273,7 @@
    <widget class="Line" name="line_17">
     <property name="geometry">
      <rect>
-      <x>299</x>
+      <x>300</x>
       <y>0</y>
       <width>1</width>
       <height>450</height>

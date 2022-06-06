@@ -59,12 +59,12 @@ void Tile::paintEvent(QPaintEvent*)
             const float textWidth = Settings::TileTextFontMetrics.horizontalAdvance(m_value);
 
             //Draw value text
-            pauinter.drawText(QPoint(Settings::TileSize/2 - textWidth/2, Settings::TileSize/2 + Settings::TileTextFontMetrics.height()/4), QString::number(m_value));
+            pauinter.drawText(QPointF(Settings::TileSize/2 - textWidth/2, Settings::TileSize/2 + Settings::TileTextFontMetrics.height()/4), QString::number(m_value));
         }
 
         if(m_bSelected)
         {
-            pauinter.drawRect(QRect(0, 0, Settings::TileSize-1, Settings::TileSize-1));
+            pauinter.drawRect(QRect(1, 1, Settings::TileSize-2, Settings::TileSize-2));
         }
     }
 }
