@@ -352,13 +352,11 @@ void AiThread::run()
     clock_t start = clock();
 #endif
 
-            QVector<QVector<int>> board = m_board;
-
             int x = 0;
             int y = 0;
-            if(findFirstEmptySpot(board, x, y))
+            if(findFirstEmptySpot(m_board, x, y))
             {
-                if(findSolution(board, x, y))
+                if(findSolution(m_board, x, y))
                 {
                     qDebug() << "AiThread::run - Ai found solution";
                 }
