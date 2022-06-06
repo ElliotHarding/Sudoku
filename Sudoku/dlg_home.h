@@ -21,6 +21,7 @@ public:
     ~DLG_Home();
 
 protected:
+    ///User input events
     void mousePressEvent(QMouseEvent* mouseEvent) override;
     void keyPressEvent(QKeyEvent *event) override;
 
