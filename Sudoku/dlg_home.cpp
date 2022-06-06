@@ -33,10 +33,6 @@ DLG_Home::DLG_Home(QWidget *parent)
     }
 
     generateBoard();
-
-#ifdef AI_DEBUG
-    on_btn_ai_clicked();
-#endif
 }
 
 DLG_Home::~DLG_Home()
@@ -100,13 +96,7 @@ void randomlyFillSubGrid(QVector<QVector<int>>& board, const int& startX, const 
     int x = startX;
     int y = startY;
 
-#ifdef AI_DEBUG
-    static int seed = 1;
-    std::mt19937 eng(seed++);
-#else
     std::mt19937 eng(clock());
-#endif
-
     std::vector<int> randomSubGrid = Settings::SubGridOptions;
     std::shuffle(randomSubGrid.begin(), randomSubGrid.end(), eng);
 
@@ -287,6 +277,19 @@ void DLG_Home::on_btn_ai_clicked()
 {
     if(!m_pAiThread->isWorking())
     {
+#ifdef AI_DEBUG
+        QVector<QVector<int>> board = {{0,0,0, 0,0,0, 0,8,0},
+                                       {4,0,0, 0,0,0, 0,0,7},
+                                       {0,8,0, 7,0,0, 0,0,0},
+
+                                       {1,5,0, 6,0,0, 0,0,0},
+                                       {0,0,0, 0,9,0, 0,0,0},
+                                       {0,0,4, 0,8,0, 0,9,3},
+
+                                       {0,0,0, 0,0,0, 0,0,1},
+                                       {9,0,0, 0,0,0, 0,0,0},
+                                       {0,6,0, 0,0,1, 9,5,0}};
+#else
         QVector<QVector<int>> board = QVector<QVector<int>>(m_board.size(), QVector<int>(m_board[0].size(), 0));
         for(int x = 0; x < m_board.size(); x++)
         {
@@ -295,6 +298,7 @@ void DLG_Home::on_btn_ai_clicked()
                 board[x][y] = m_board[x][y]->value();
             }
         }
+#endif
         m_pAiThread->setBoard(board);
     }
 }
