@@ -50,6 +50,7 @@ public:
     Tile(DLG_Home* parent, const uint& x, const uint& y, const uint& w, const uint& h);
 
     void reset();
+    void resetPotentialTile();
 
 protected:
     void paintEvent(QPaintEvent* paintEvent) override;

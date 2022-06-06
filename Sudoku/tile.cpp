@@ -21,6 +21,11 @@ void Tile::reset()
     update();
 }
 
+void Tile::resetPotentialTile()
+{
+    m_pPotentialTile->reset();
+}
+
 void Tile::paintEvent(QPaintEvent*)
 {
     if(m_value != 0 || m_bSelected)
