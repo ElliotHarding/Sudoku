@@ -34,7 +34,9 @@ DLG_Home::DLG_Home(QWidget *parent)
         }
     }
 
+#ifndef AI_DEBUG
     generateBoard();
+#endif
 }
 
 DLG_Home::~DLG_Home()
@@ -279,28 +281,42 @@ void DLG_Home::on_btn_ai_clicked()
 {
     if(!m_pAiThread->isWorking())
     {
-#ifdef AI_DEBUG
-        QVector<QVector<int>> board = {{0,0,0, 0,0,0, 0,8,0},
-                                       {4,0,0, 0,0,0, 0,0,7},
-                                       {0,8,0, 7,0,0, 0,0,0},
+        #ifdef AI_DEBUG
 
-                                       {1,5,0, 6,0,0, 0,0,0},
-                                       {0,0,0, 0,9,0, 0,0,0},
-                                       {0,0,4, 0,8,0, 0,9,3},
+            QVector<QVector<int>> board = {{0,0,0, 0,0,0, 0,8,0},
+                                           {4,0,0, 0,0,0, 0,0,7},
+                                           {0,8,0, 7,0,0, 0,0,0},
 
-                                       {2,0,0, 0,0,0, 0,0,1},
-                                       {9,0,0, 0,0,0, 0,0,0},
-                                       {0,6,0, 0,0,1, 9,5,0}};
-#else
-        QVector<QVector<int>> board = QVector<QVector<int>>(m_board.size(), QVector<int>(m_board[0].size(), 0));
-        for(int x = 0; x < m_board.size(); x++)
-        {
-            for(int y = 0; y < m_board[x].size(); y++)
+                                           {1,5,0, 6,0,0, 0,0,0},
+                                           {0,0,0, 0,9,0, 0,0,0},
+                                           {0,0,4, 0,8,0, 0,9,3},
+
+                                           {2,0,0, 0,0,0, 0,0,1},
+                                           {9,0,0, 0,0,0, 0,0,0},
+                                           {0,6,0, 0,0,1, 9,5,0}};
+
+            for(int x = 0; x < board.size(); x++)
             {
-                board[x][y] = m_board[x][y]->value();
+                for(int y = 0; y < board[x].size(); y++)
+                {
+                    m_board[x][y]->setValue(board[x][y]);
+                    m_board[x][y]->setPermanent(board[x][y] != 0);
+                }
             }
-        }
-#endif
+
+        #else
+
+            QVector<QVector<int>> board = QVector<QVector<int>>(m_board.size(), QVector<int>(m_board[0].size(), 0));
+            for(int x = 0; x < m_board.size(); x++)
+            {
+                for(int y = 0; y < m_board[x].size(); y++)
+                {
+                    board[x][y] = m_board[x][y]->value();
+                }
+            }
+
+        #endif
+
         m_pAiThread->setBoard(board);
     }
 }
