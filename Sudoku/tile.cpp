@@ -49,7 +49,7 @@ void Tile::reset()
     update();
 }
 
-void Tile::mousePressEvent(QMouseEvent* mouseEvent)
+void Tile::mousePressEvent(QMouseEvent*)
 {
     m_bSelected = true;
     m_pHome->setSelectedTile(this);
