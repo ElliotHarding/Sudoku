@@ -12,7 +12,7 @@ const uint PotentialTileSize = 16;
 const uint PotentialTilePadding = 2;
 
 ///Tile color
-const QColor PotentialTileColor = Qt::gray;
+const QColor PotentialTileColor = Qt::lightGray;
 
 ///Tile text
 const QColor TileTextColorPermanent = Qt::black;
