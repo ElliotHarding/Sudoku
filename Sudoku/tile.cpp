@@ -7,50 +7,6 @@
 #include <QMouseEvent>
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// Tile::Tile
-///
-Tile::Tile(DLG_Home* parent, const uint& x, const uint& y, const uint& w, const uint& h) : BaseTile(parent, parent, x, y, w, h),
-    m_pPotentialTile(new PotentialTile(parent, this, Settings::TileSize - Settings::PotentialTileSize - Settings::PotentialTilePadding, Settings::PotentialTilePadding, Settings::PotentialTileSize, Settings::PotentialTileSize))
-{
-}
-
-void Tile::reset()
-{
-    m_value = 0;
-    m_pPotentialTile->reset();
-    update();
-}
-
-void Tile::resetPotentialTile()
-{
-    m_pPotentialTile->reset();
-}
-
-void Tile::paintEvent(QPaintEvent*)
-{
-    if(m_value != 0 || m_bSelected)
-    {
-        QPainter painter(this);
-        painter.setPen(m_bPermanent ? Settings::TileTextColorPermanent : Settings::TileTextColorEditable);
-
-        if(m_value != 0)
-        {
-            //Prep value text drawing
-            painter.setFont(Settings::TileTextFont);
-            const float textWidth = Settings::TileTextFontMetrics.horizontalAdvance(QString::number(m_value));
-
-            //Draw value text
-            painter.drawText(QPointF(geometry().width()/2 - textWidth/2, geometry().height()/2 + Settings::TileTextFontMetrics.height()/4), QString::number(m_value));
-        }
-
-        if(m_bSelected)
-        {
-            painter.drawRect(QRect(1, 1, geometry().width()-2, geometry().height()-2));
-        }
-    }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// BaseTile::BaseTile
 ///
 BaseTile::BaseTile(DLG_Home* pHome, QWidget* pParent, const uint &x, const uint &y, const uint &w, const uint &h) : QWidget(pParent),
@@ -126,6 +82,51 @@ void PotentialTile::paintEvent(QPaintEvent*)
 
             //Draw value text
             painter.drawText(QPointF(geometry().width()/2 - textWidth/2, geometry().height()/2 + Settings::PotentialTileTextFontMetrics.height()/3), QString::number(m_value));
+        }
+
+        if(m_bSelected)
+        {
+            painter.drawRect(QRect(1, 1, geometry().width()-2, geometry().height()-2));
+        }
+    }
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Tile::Tile
+///
+Tile::Tile(DLG_Home* parent, const uint& x, const uint& y, const uint& w, const uint& h) : BaseTile(parent, parent, x, y, w, h),
+    m_pPotentialTile(new PotentialTile(parent, this, Settings::TileSize - Settings::PotentialTileSize - Settings::PotentialTilePadding, Settings::PotentialTilePadding, Settings::PotentialTileSize, Settings::PotentialTileSize))
+{
+}
+
+void Tile::reset()
+{
+    m_value = 0;
+    m_pPotentialTile->reset();
+    update();
+}
+
+void Tile::resetPotentialTile()
+{
+    m_pPotentialTile->reset();
+}
+
+void Tile::paintEvent(QPaintEvent*)
+{
+    if(m_value != 0 || m_bSelected)
+    {
+        QPainter painter(this);
+        painter.setPen(m_bPermanent ? Settings::TileTextColorPermanent : Settings::TileTextColorEditable);
+
+        if(m_value != 0)
+        {
+            //Prep value text drawing
+            painter.setFont(Settings::TileTextFont);
+            const float textWidth = Settings::TileTextFontMetrics.horizontalAdvance(QString::number(m_value));
+
+            //Draw value text
+            painter.drawText(QPointF(geometry().width()/2 - textWidth/2, geometry().height()/2 + Settings::TileTextFontMetrics.height()/4), QString::number(m_value));
         }
 
         if(m_bSelected)
