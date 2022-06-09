@@ -11,12 +11,12 @@ const uint TileSize = 50;
 const uint PotentialTileSize = 16;
 const uint PotentialTilePadding = 2;
 
-///Tile color
+///Tile colors
 const QColor PotentialTileColor = Qt::lightGray;
-
-///Tile text
 const QColor TileTextColorPermanent = Qt::black;
 const QColor TileTextColorEditable = Qt::blue;
+
+///Tile text
 const QFont TileTextFont = QFont("Helvetica [Cronyx]", 15, QFont::Normal);
 const QFont PotentialTileTextFont = QFont("Helvetica [Cronyx]", 8, QFont::Normal);
 const QFontMetrics TileTextFontMetrics(TileTextFont);
